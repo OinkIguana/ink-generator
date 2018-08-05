@@ -1,0 +1,28 @@
+cargo-features = ["edition"]
+
+[package]
+name = "ink-generator"
+version = "0.1.0"
+authors = ["Cameron Eldridge <cameldridge+git@gmail.com>"]
+edition = "2018"
+
+[lib]
+name = "inkgen"
+path = "src/lib.rs"
+
+[features]
+default = ["compiler", "runtime"]
+runtime = []
+compiler = ["quote", "proc-macro2"]
+
+[[bin]]
+name = "inkgen"
+path = "src/bin/compiler.rs"
+
+[[bin]]
+name = "inkplay"
+path = "src/bin/runtime.rs"
+
+[dependencies]
+quote = { version = "0.6", optional = true }
+proc-macro2 = { version = "0.4", optional = true }
