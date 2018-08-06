@@ -40,7 +40,7 @@ crate fn print_knot(name: &str, knot: &Knot) -> TokenStream {
     quote! {
         mod #name {
             use inkgen::runtime as inkgen;
-            pub(super) fn entry(input: inkgen::Rc<inkgen::Cell<usize>>) -> impl inkgen::Generator<Yield = inkgen::Paragraph, Return = ()> {
+            pub(super) fn entry(input: inkgen::Arc<inkgen::Mutex<usize>>) -> impl inkgen::Generator<Yield = inkgen::Paragraph, Return = ()> {
                 #entry
             }
             #(#stitches)*

@@ -9,7 +9,7 @@ crate fn print_stitch(name: &str, stitch: &Stitch, relative_paths: &Vec<&String>
     let name = Ident::new(&format!("stitch_{}", name), Span::call_site());
     let segments = print_segments(&stitch.segments, relative_paths, quote! { super:: });
     quote! {
-        pub(super) fn #name(input: inkgen::Rc<inkgen::Cell<usize>>) -> impl inkgen::Generator<Yield = inkgen::Paragraph, Return = ()> {
+        pub(super) fn #name(input: inkgen::Arc<inkgen::Mutex<usize>>) -> impl inkgen::Generator<Yield = inkgen::Paragraph, Return = ()> {
             move || {
                 #(#segments)*
             }

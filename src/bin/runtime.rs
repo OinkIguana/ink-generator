@@ -9,7 +9,7 @@ fn main() {
     let mut story = story::story::story();
     let mut selection = 0usize;
     loop {
-        if let Some((paragraph, s)) = story.next(selection) {
+        if let Some((paragraph, s)) = unsafe { story.select(selection) } {
             story = s;
             println!("{}", paragraph.text());
             if let Some(choices) = paragraph.choices() {

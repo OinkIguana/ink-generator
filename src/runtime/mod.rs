@@ -1,6 +1,6 @@
-pub use std::cell::Cell;
+pub use std::sync::Mutex;
 pub use std::ops::{Generator, GeneratorState};
-pub use std::rc::Rc;
+pub use std::sync::Arc;
 
 fn collect_parts(mut collect: Vec<Part>, part: &Part) -> Vec<Part> {
     let len = collect.len();
@@ -91,14 +91,20 @@ impl Paragraph {
 }
 
 pub struct Story {
-    input: Rc<Cell<usize>>,
-    generator: Box<dyn Generator<Yield = Paragraph, Return = ()>>,
+    input: Arc<Mutex<usize>>,
+    generator: Box<dyn Generator<Yield = Paragraph, Return = ()> + Sync + Send>,
+}
+
+impl std::fmt::Debug for Story {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'a>) -> std::fmt::Result {
+        write!(f, "Story {{}}")
+    }
 }
 
 impl Story {
-    pub fn new<Gen>(input: Rc<Cell<usize>>, generator: Gen) -> Self
+    pub fn new<Gen>(input: Arc<Mutex<usize>>, generator: Gen) -> Self
     where
-        Gen: Generator<Yield = Paragraph, Return = ()> + 'static,
+        Gen: Generator<Yield = Paragraph, Return = ()> + Sync + Send + 'static,
     {
         Story {
             input,
@@ -106,12 +112,23 @@ impl Story {
         }
     }
 
-    pub fn next(mut self, input: usize) -> Option<(Paragraph, Self)> {
-        self.input.set(input);
-        match unsafe { self.generator.resume() } {
+    // TODO: might be nice to make many structs (UnsartedStory, Story, and ChoiceStory) with only
+    // the required methods available. That adds different pain to using this library though.
+    pub unsafe fn next(mut self) -> Option<(Paragraph, Self)> {
+        // NOTE on unsafety: This is not actually unsafe because of the generator usage, but
+        // because calling the wrong method (of select or next) could lead to weird behaviour in
+        // the output of the story. For now, that behaviour is undefined, and may cause a panic
+        // or even prevent compilation in the future.
+
+        match self.generator.resume() {
             GeneratorState::Yielded(paragraph) => Some((paragraph, self)),
             GeneratorState::Complete(..) => None,
         }
+    }
+
+    pub unsafe fn select(self, input: usize) -> Option<(Paragraph, Self)> {
+        *self.input.lock().unwrap() = input;
+        self.next()
     }
 }
 

@@ -165,7 +165,7 @@ crate fn print_segments(
                     #output
                     loop {
                         yield inkgen::Paragraph::new(vec![#(#last),*], Some(vec![#(#options),*]));
-                        let choice = input.get();
+                        let choice = *input.lock().unwrap();
                         match choice {
                             #(#cases)*
                             _ => continue,

@@ -27,7 +27,7 @@ pub fn pretty_print(name: &str, ink: Ink) -> String {
             use inkgen::runtime as inkgen;
 
             pub fn story() -> inkgen::Story {
-                let input: inkgen::Rc<inkgen::Cell<usize>> = inkgen::Rc::default();
+                let input: inkgen::Arc<inkgen::Mutex<usize>> = inkgen::Arc::default();
                 inkgen::Story::new(input.clone(), move || {
                     #entry
                 })

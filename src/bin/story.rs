@@ -3,7 +3,7 @@ pub mod story {
     use inkgen::runtime as inkgen;
     use inkgen::yield_all;
     pub fn story() -> inkgen::Story {
-        let input: inkgen::Rc<inkgen::Cell<usize>> = inkgen::Rc::default();
+        let input: inkgen::Arc<inkgen::Mutex<usize>> = inkgen::Arc::default();
         inkgen::Story::new(input.clone(), move || {
             loop {
                 yield inkgen::Paragraph::new(
@@ -22,7 +22,7 @@ pub mod story {
                         ],
                     ]),
                 );
-                let choice = input.get();
+                let choice = *input.lock().unwrap();
                 match choice {
                     0usize => {
                         yield inkgen::Paragraph::new(
@@ -84,12 +84,12 @@ pub mod story {
     mod knot_tomorrow {
         use inkgen::runtime as inkgen;
         pub(super) fn entry(
-            input: inkgen::Rc<inkgen::Cell<usize>>,
+            input: inkgen::Arc<inkgen::Mutex<usize>>,
         ) -> impl inkgen::Generator<Yield = inkgen::Paragraph, Return = ()> {
             stitch_morning(input.clone())
         }
         pub(super) fn stitch_morning(
-            input: inkgen::Rc<inkgen::Cell<usize>>,
+            input: inkgen::Arc<inkgen::Mutex<usize>>,
         ) -> impl inkgen::Generator<Yield = inkgen::Paragraph, Return = ()> {
             move || {
                 yield inkgen::Paragraph::new(
@@ -123,7 +123,7 @@ pub mod story {
                             ],
                         ]),
                     );
-                    let choice = input.get();
+                    let choice = *input.lock().unwrap();
                     match choice {
                         0usize => {
                             yield inkgen::Paragraph::new(
