@@ -12,7 +12,7 @@ crate use self::{knot::*, message::*, segment::*, stitch::*};
 
 #[derive(Clone, Debug)]
 pub struct Ink {
-    crate entry: Knot,
+    crate entry: Vec<Segment>,
     crate knots: HashMap<String, Knot>,
 }
 
@@ -25,7 +25,20 @@ impl Ink {
                 .map(|(i, line)| (i, line.trim()))
                 .collect::<Vec<_>>(),
         );
-        let entry = Knot::parse(&mut lines)?;
+        let mut segments = vec![];
+        loop {
+            if let Some((_, line)) = lines.peek() {
+                if line.starts_with("=") {
+                    break;
+                } else if let Some(segment) = Segment::parse(1, &mut lines)? {
+                    segments.push(segment);
+                } else {
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
         let mut knots = HashMap::new();
         loop {
             if let Some((i, line)) = lines.next().cloned() {
@@ -41,7 +54,10 @@ impl Ink {
                     _ => return Err(Error::Unknown),
                 }
             } else {
-                return Ok(Ink { entry, knots });
+                return Ok(Ink {
+                    entry: segments,
+                    knots,
+                });
             }
         }
     }

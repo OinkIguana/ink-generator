@@ -1,4 +1,4 @@
-#![feature(generators, generator_trait, iterator_find_map)]
+#![feature(generators, generator_trait, iterator_find_map, nll)]
 #![recursion_limit = "128"]
 
 #[cfg(feature = "compiler")]
@@ -9,6 +9,7 @@ mod parser;
 mod prettyprinter;
 
 #[cfg(feature = "runtime")]
+#[macro_use]
 pub mod runtime;
 
 #[cfg(feature = "compiler")]

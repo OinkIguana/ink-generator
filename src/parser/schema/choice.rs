@@ -29,13 +29,8 @@ impl Choice {
             let parts = line
                 .split(|c| c == '[' || c == ']')
                 .take(3)
-                .enumerate()
-                .try_fold(vec![], |mut messages, (i, string)| {
-                    if i == 2 {
-                        messages.push(Message::with_break(string, line_index)?);
-                    } else {
-                        messages.push(Message::parse(string, line_index)?);
-                    }
+                .try_fold(vec![], |mut messages, string| {
+                    messages.push(Message::parse(string, line_index)?);
                     Ok(messages)
                 })?;
             Ok(Some(Choice {

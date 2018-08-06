@@ -57,6 +57,12 @@ impl Paragraph {
         Self { parts, choices }
     }
 
+    #[doc(hidden)]
+    pub fn join(mut self, mut other: Paragraph) -> Self {
+        self.parts.append(&mut other.parts);
+        self
+    }
+
     /// The string representation of this paragraph's text
     pub fn text(&self) -> String {
         self.parts
@@ -109,13 +115,15 @@ impl Story {
     }
 }
 
+#[macro_export]
 macro_rules! yield_all {
     ($generator:expr) => {
         loop {
+            use std::ops::{Generator, GeneratorState};
             match unsafe { $generator.resume() } {
-                GeneratorState::Yielded(y) => yield y;
-                GeneratorState::Complete(r) => break r;
+                GeneratorState::Yielded(y) => yield y,
+                GeneratorState::Complete(r) => break r,
             }
         }
-    }
+    };
 }

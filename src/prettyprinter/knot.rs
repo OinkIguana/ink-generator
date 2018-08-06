@@ -10,13 +10,19 @@ use super::stitch::print_stitch;
 crate fn print_knot(name: &str, knot: &Knot) -> TokenStream {
     let name = Ident::new(&format!("knot_{}", name), Span::call_site());
 
+    let relative_paths = knot
+        .stitches
+        .iter()
+        .map(|(name, _)| name)
+        .collect::<Vec<_>>();
+
     let stitches = knot
         .stitches
         .iter()
-        .map(|(name, stitch)| print_stitch(name, stitch));
+        .map(|(name, stitch)| print_stitch(name, stitch, &relative_paths));
 
     let entry = if let Some(stitch) = &knot.entry {
-        let segments = print_segments(&stitch.segments);
+        let segments = print_segments(&stitch.segments, &relative_paths, quote!{ super:: });
         quote! {
             move || {
                 #segments
@@ -34,7 +40,7 @@ crate fn print_knot(name: &str, knot: &Knot) -> TokenStream {
     quote! {
         mod #name {
             use inkgen::runtime as inkgen;
-            pub fn entry(input: inkgen::Rc<inkgen::Cell<usize>>) -> impl inkgen::Generator<Yield = inkgen::Paragraph, Return = ()> {
+            pub(super) fn entry(input: inkgen::Rc<inkgen::Cell<usize>>) -> impl inkgen::Generator<Yield = inkgen::Paragraph, Return = ()> {
                 #entry
             }
             #(#stitches)*

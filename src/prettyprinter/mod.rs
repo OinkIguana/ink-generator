@@ -14,30 +14,17 @@ use self::stitch::print_stitch;
 
 pub fn pretty_print(name: &str, ink: Ink) -> String {
     let name = Ident::new(name, Span::call_site());
-
-    let entry = if let Some(stitch) = ink.entry.entry {
-        let segments = print_segments(&stitch.segments);
-        quote! {
-            #segments
-        }
-    } else {
-        let name = Ident::new(
-            &format!("stitch_{}", ink.entry.stitches[0].0),
-            Span::call_site(),
-        );
-        quote! {
-            yield_all! { #name(input.clone()) }
-        }
-    };
-    let stitches = ink
-        .entry
-        .stitches
-        .iter()
-        .map(|(name, stitch)| print_stitch(name, stitch));
+    let entry = print_segments(
+        &ink.entry,
+        &ink.knots.iter().map(|(name, _)| name).collect::<Vec<_>>(),
+        quote!{},
+    );
     let knots = ink.knots.iter().map(|(name, knot)| print_knot(name, knot));
 
     let tokens = quote! {
         pub mod #name {
+            #![allow(dead_code)]
+            use inkgen::yield_all;
             use inkgen::runtime as inkgen;
 
             pub fn story() -> inkgen::Story {
@@ -46,8 +33,6 @@ pub fn pretty_print(name: &str, ink: Ink) -> String {
                     #entry
                 })
             }
-
-            #(#stitches)*
 
             #(#knots)*
         }

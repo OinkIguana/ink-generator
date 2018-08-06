@@ -11,7 +11,8 @@ name = "inkgen"
 path = "src/lib.rs"
 
 [features]
-default = ["compiler", "runtime"]
+default = ["compiler", "runtime", "binary"]
+binary = ["colored", "text_io"]
 runtime = []
 compiler = ["quote", "proc-macro2"]
 
@@ -24,5 +25,7 @@ name = "inkplay"
 path = "src/bin/runtime.rs"
 
 [dependencies]
+colored = { version = "1.6", optional = true }
+text_io = { version = "0.1.7", optional = true }
 quote = { version = "0.6", optional = true }
 proc-macro2 = { version = "0.4", optional = true }
