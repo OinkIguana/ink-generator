@@ -40,12 +40,24 @@ This package contains two binaries: `inkgen` and `inkplay` (sort of).
 
 ### `inkgen`
 
-`inkgen` reads an Ink script from stdin, and outputs its corresponding Rust module on stdout. Pipe
-to and from files/rustfmt as needed. Recommended usage:
+`inkgen` takes two parameters: the input file (.ink) and the output file (.rs). The output file will
+contain a Rust module with the same name as the output file. The output file both the input and
+output files can be excluded. If a filename is missing, `stdin` or `stdout` is used instead,
+respectively.
 
 ```
-inkgen < story.ink | rustfmt > story.rs
+inkgen story.ink story.rs
 ```
+
+The generated code comes out really ugly, so if you are planning to read it, it is suggested to use
+`rustfmt` to format the output, as follows:
+
+```
+inkgen story.ink | rustfmt > story.rs
+```
+
+In this case, the module in the generated file will take the same name as the input file. If `stdin`
+is used, the module will be called `story`, for lack of a better name.
 
 ### `inkplay`
 

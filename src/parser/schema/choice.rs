@@ -26,13 +26,13 @@ impl Choice {
             line = line[1..].trim_left();
         }
         if count == depth {
-            let parts = line
-                .split(|c| c == '[' || c == ']')
-                .take(3)
-                .try_fold(vec![], |mut messages, string| {
+            let parts = line.split(|c| c == '[' || c == ']').take(3).try_fold(
+                vec![],
+                |mut messages, string| {
                     messages.push(Message::parse(string, line_index)?);
                     Ok(messages)
-                })?;
+                },
+            )?;
             Ok(Some(Choice {
                 sticky,
                 prefix: parts.get(0).cloned().unwrap_or(Message::empty()),

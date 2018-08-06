@@ -10,7 +10,6 @@ mod stitch;
 
 use self::knot::print_knot;
 use self::segment::print_segments;
-use self::stitch::print_stitch;
 
 pub fn pretty_print(name: &str, ink: Ink) -> String {
     let name = Ident::new(name, Span::call_site());

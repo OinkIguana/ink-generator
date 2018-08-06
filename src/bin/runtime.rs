@@ -1,12 +1,12 @@
 #![feature(generators, generator_trait)]
 
 use colored::*;
+use std::io::{stdout, Write};
 use text_io::*;
-use std::io::{Write, stdout};
-mod test;
+mod story;
 
 fn main() {
-    let mut story = test::story::story();
+    let mut story = story::story::story();
     let mut selection = 0usize;
     loop {
         if let Some((paragraph, s)) = story.next(selection) {
