@@ -18,7 +18,7 @@ impl Part {
     }
 }
 
-#[derive(Clone, Eq, PartialEq, Debug)]
+#[derive(Clone, Eq, PartialEq, Default, Debug)]
 pub struct Paragraph {
     parts: Vec<Part>,
     choices: Option<Vec<Vec<Part>>>,
@@ -61,7 +61,7 @@ impl Paragraph {
 
 pub struct Story {
     input: Arc<Mutex<usize>>,
-    buffered_paragraph: Paragraph,
+    buffered_paragraph: Option<Paragraph>,
     generator: Box<dyn Generator<Yield = Paragraph, Return = ()> + Sync + Send>,
 }
 
@@ -78,7 +78,7 @@ impl Story {
         Gen: Generator<Yield = Paragraph, Return = ()> + Sync + Send + 'static,
     {
         let buffered_paragraph = match unsafe { generator.resume() } {
-            GeneratorState::Yielded(paragraph) => paragraph,
+            GeneratorState::Yielded(paragraph) => Some(paragraph),
             GeneratorState::Complete(..) => panic!("Trying to start an empty story is illegal."),
         };
         Story {
@@ -95,17 +95,25 @@ impl Story {
         // because calling the wrong method (of select or next) could lead to weird behaviour in
         // the output of the story. For now, that behaviour is undefined, and may cause a panic
         // or even prevent compilation in the future.
-        let mut output = self.buffered_paragraph;
+
+        // there's a lot of crazy moving and stuff going on here, but it works so whatever
+        let mut output = self.buffered_paragraph.take();
         loop {
-            match self.generator.resume() {
-                GeneratorState::Yielded(paragraph) => self.buffered_paragraph = paragraph,
-                GeneratorState::Complete(..) => return (output, None),
+            if output.as_ref().and_then(Paragraph::choices).is_none() {
+                match self.generator.resume() {
+                    GeneratorState::Yielded(paragraph) => self.buffered_paragraph = Some(paragraph),
+                    GeneratorState::Complete(..) => return (output.expect("Should have gotten output by now"), None),
+                }
             }
-            if output.parts.iter().last() == Some(&Part::Glue) || self.buffered_paragraph.parts.iter().next() == Some(&Part::Glue) {
-                output = output.join(self.buffered_paragraph);
+            if output.is_none() || // no output, we need to join
+                (output.as_ref().unwrap().choices.is_none() && ( // otherwise, join if there's glue and no choices
+                    output.as_ref().unwrap().parts.iter().last() == Some(&Part::Glue) ||
+                    self.buffered_paragraph.as_ref().unwrap().parts.iter().next() == Some(&Part::Glue)
+                )) {
+                output = Some(output.unwrap_or_default().join(self.buffered_paragraph.take().unwrap()));
                 continue;
             }
-            return (output, Some(self));
+            return (output.expect("Should have gotten output by now"), Some(self));
         }
     }
 
