@@ -1,5 +1,5 @@
 pub mod story {
-    #![allow(dead_code)]
+    #![allow(dead_code, unused_imports)]
     use inkgen::runtime as inkgen;
     use inkgen::yield_all;
     pub fn story() -> inkgen::Story {

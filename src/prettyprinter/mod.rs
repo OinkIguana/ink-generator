@@ -22,7 +22,7 @@ pub fn pretty_print(name: &str, ink: Ink) -> String {
 
     let tokens = quote! {
         pub mod #name {
-            #![allow(dead_code)]
+            #![allow(dead_code, unused_imports)]
             use inkgen::yield_all;
             use inkgen::runtime as inkgen;
 

@@ -4,6 +4,7 @@ cargo-features = ["edition"]
 name = "ink-generator"
 version = "0.1.0"
 authors = ["Cameron Eldridge <cameldridge+git@gmail.com>"]
+autobins = false
 edition = "2018"
 
 [lib]
@@ -19,10 +20,12 @@ compiler = ["quote", "proc-macro2"]
 [[bin]]
 name = "inkgen"
 path = "src/bin/compiler.rs"
+required-features = ["compiler", "binary"]
 
 [[bin]]
 name = "inkplay"
 path = "src/bin/runtime.rs"
+required-features = ["runtime", "binary"]
 
 [dependencies]
 colored = { version = "1.6", optional = true }
