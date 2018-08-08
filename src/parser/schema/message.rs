@@ -115,22 +115,23 @@ mod parser {
 
     fn tokenize(mut string: &str) -> Result<Vec<Token>, Error> {
         fn lmm(state: State, string: &str) -> Result<(&str, Token), Error> {
-            match (state, string.chars().nth(0)) {
+            let mut chars = string.chars();
+            match (state, chars.next()) {
                 (State::Start, None) => {
                     unreachable!("Trying to munch empty string from Start state")
                 }
-                (State::Start, Some('{')) => lmm(State::LBrace, &string[1..]),
-                (State::Start, Some('}')) => lmm(State::RBrace, &string[1..]),
-                (State::Start, Some('-')) => lmm(State::Dash, &string[1..]),
-                (State::Start, Some('<')) => lmm(State::Lt, &string[1..]),
-                (State::Start, Some('|')) => lmm(State::Bar, &string[1..]),
-                (State::Start, Some(ch)) => lmm(State::Text(ch), &string[1..]),
-                (State::LBrace, Some('~')) => lmm(State::LBraceTilde, &string[1..]),
-                (State::LBrace, Some('!')) => lmm(State::LBraceBang, &string[1..]),
-                (State::LBrace, Some('&')) => lmm(State::LBraceAmp, &string[1..]),
-                (State::Lt, Some('>')) => lmm(State::LtGt, &string[1..]),
-                (State::Lt, Some('-')) => lmm(State::LtDash, &string[1..]),
-                (State::Dash, Some('>')) => lmm(State::DashGt, &string[1..]),
+                (State::Start, Some('{')) => lmm(State::LBrace, chars.as_str()),
+                (State::Start, Some('}')) => lmm(State::RBrace, chars.as_str()),
+                (State::Start, Some('-')) => lmm(State::Dash, chars.as_str()),
+                (State::Start, Some('<')) => lmm(State::Lt, chars.as_str()),
+                (State::Start, Some('|')) => lmm(State::Bar, chars.as_str()),
+                (State::Start, Some(ch)) => lmm(State::Text(ch), chars.as_str()),
+                (State::LBrace, Some('~')) => lmm(State::LBraceTilde, chars.as_str()),
+                (State::LBrace, Some('!')) => lmm(State::LBraceBang, chars.as_str()),
+                (State::LBrace, Some('&')) => lmm(State::LBraceAmp, chars.as_str()),
+                (State::Lt, Some('>')) => lmm(State::LtGt, chars.as_str()),
+                (State::Lt, Some('-')) => lmm(State::LtDash, chars.as_str()),
+                (State::Dash, Some('>')) => lmm(State::DashGt, chars.as_str()),
                 (state, _) => Ok((string, state.to_token())),
             }
         }

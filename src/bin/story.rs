@@ -5,172 +5,67 @@ pub mod story {
     pub fn story() -> inkgen::Story {
         let input: inkgen::Arc<inkgen::Mutex<usize>> = inkgen::Arc::default();
         inkgen::Story::new(input.clone(), move || {
+            yield inkgen::Paragraph::new(
+                vec![inkgen::Part::Text(String::from(
+                    "You: <thought:Something feels off...>",
+                ))],
+                None,
+            );
+            yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Text ( String :: from ( "You: Who\'s in there? You\'d best come out quick. I don\'t take kindly to being snuck up on." ) ) ] , None ) ;
             loop {
                 yield inkgen::Paragraph::new(
                     vec![inkgen::Part::Text(String::from(
-                        "\"What\'s that?\" my master asked.",
+                        "(Voice): Heh. You\'re a sharp one...",
                     ))],
                     Some(vec![
+                        vec![inkgen::Part::Text(String::from("..."))],
                         vec![
-                            inkgen::Part::Text(String::from("\"I am somewhat tired")),
-                            inkgen::Part::Text(String::from(".\"")),
-                        ],
-                        vec![inkgen::Part::Text(String::from("\"Nothing, Monsieur!\""))],
-                        vec![
-                            inkgen::Part::Text(String::from("\"I said, this journey is appalling")),
-                            inkgen::Part::Text(String::from(".\"")),
+                            inkgen::Part::Text(String::from("You: Watch it")),
+                            inkgen::Part::Text(String::from(".")),
                         ],
                     ]),
                 );
                 let choice = *input.lock().unwrap();
                 match choice {
                     0usize => {
+                        yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Text ( String :: from ( "Mystery Man: ... but I knew that already. Your reputation precedes you, kid." ) ) ] , None ) ;
+                        yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Text ( String :: from ( "Mystery Man: I\'ve been looking for talent like yours. Heard it could be found around here." ) ) ] , None ) ;
+                        yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Text ( String :: from ( "Mystery Man: I realize you\'ve got some cops to be getting away from right now, so why don\'t you" ) ) , inkgen :: Part :: Glue ] , None ) ;
+                        yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Text ( String :: from ( "just take this and give me a call everything\'s all settled down again, hm?" ) ) ] , None ) ;
                         yield inkgen::Paragraph::new(
-                            vec![
-                                inkgen::Part::Text(String::from("\"I am somewhat tired")),
-                                inkgen::Part::Text(String::from(",\" I repeated.")),
-                            ],
+                            vec![inkgen::Part::Text(String::from("You: ... What is it?"))],
                             None,
                         );
+                        yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Text ( String :: from ( "Mystery Man: A proposition... of a sort. I think you\'ll be interested. Now if you\'ll excuse me," ) ) , inkgen :: Part :: Glue ] , None ) ;
                         yield inkgen::Paragraph::new(
                             vec![inkgen::Part::Text(String::from(
-                                "\"Really,\" he responded. \"How deleterious.\"",
+                                "I\'ve some else place to be right now.",
                             ))],
                             None,
                         );
                         break;
                     }
                     1usize => {
+                        yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Text ( String :: from ( "You: Watch it" ) ) , inkgen :: Part :: Text ( String :: from ( ", mate. I think you might have found yourself in the wrong part of town." ) ) ] , None ) ;
+                        yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Text ( String :: from ( "Mystery Man: Whoa, no need to get all worked up. I have come on business\u{2013}" ) ) ] , None ) ;
                         yield inkgen::Paragraph::new(
-                            vec![
-                                inkgen::Part::Text(String::from("\"Nothing, Monsieur!\"")),
-                                inkgen::Part::Text(String::from("I replied.")),
-                            ],
+                            vec![inkgen::Part::Text(String::from(
+                                "You: Well hurry it up then. I haven\'t got all day.",
+                            ))],
                             None,
                         );
+                        yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Text ( String :: from ( "Mystery Man: Well, why don\'t I just leave you with this then, and I\'ll be on my way. I trust" ) ) , inkgen :: Part :: Glue ] , None ) ;
                         yield inkgen::Paragraph::new(
-                            vec![inkgen::Part::Text(String::from("\"Very good, then.\""))],
+                            vec![inkgen::Part::Text(String::from(
+                                "I\'ll be hearing from you again soon.",
+                            ))],
                             None,
                         );
-                        break;
-                    }
-                    2usize => {
-                        yield inkgen::Paragraph::new(
-                            vec![
-                                inkgen::Part::Text(String::from(
-                                    "\"I said, this journey is appalling",
-                                )),
-                                inkgen::Part::Text(String::from("and I want no more of it.\"")),
-                            ],
-                            None,
-                        );
-                        yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Text ( String :: from ( "\"Ah,\" he replied, not unkindly. \"I see you are feeling frustrated. Tomorrow, things will improve.\"" ) ) ] , None ) ;
                         break;
                     }
                     _ => continue,
                 }
             }
-            let continuation = inkgen::Paragraph::new(vec![], None);
-            let mut gen = knot_tomorrow::stitch_morning(input.clone());
-            match unsafe { inkgen::Generator::resume(&mut gen) } {
-                inkgen::GeneratorState::Yielded(paragraph) => {
-                    yield continuation.join(paragraph);
-                    yield_all ! { gen }
-                }
-                inkgen::GeneratorState::Complete(()) => yield continuation,
-            }
         })
-    }
-    mod knot_tomorrow {
-        use inkgen::runtime as inkgen;
-        pub(super) fn entry(
-            input: inkgen::Arc<inkgen::Mutex<usize>>,
-        ) -> impl inkgen::Generator<Yield = inkgen::Paragraph, Return = ()> {
-            stitch_morning(input.clone())
-        }
-        pub(super) fn stitch_morning(
-            input: inkgen::Arc<inkgen::Mutex<usize>>,
-        ) -> impl inkgen::Generator<Yield = inkgen::Paragraph, Return = ()> {
-            move || {
-                yield inkgen::Paragraph::new(
-                    vec![inkgen::Part::Text(String::from(
-                        "I heard a mumbled \"Good morning...\" as my master rolled out of bed.",
-                    ))],
-                    None,
-                );
-                yield inkgen::Paragraph::new(
-                    vec![inkgen::Part::Text(String::from(
-                        "\"Are you alright, Monsieur?\" I asked.",
-                    ))],
-                    None,
-                );
-                loop {
-                    yield inkgen::Paragraph::new(
-                        vec![inkgen::Part::Text(String::from(
-                            "\"Quite right,\" he seemed to try to say.",
-                        ))],
-                        Some(vec![
-                            vec![inkgen::Part::Text(String::from(
-                                "\"Are you quite sure of that?\"",
-                            ))],
-                            vec![
-                                inkgen::Part::Text(String::from("\"You don\'t look quite right")),
-                                inkgen::Part::Text(String::from(".\"")),
-                            ],
-                            vec![
-                                inkgen::Part::Text(String::from("\"Very well")),
-                                inkgen::Part::Text(String::from(".\"")),
-                            ],
-                        ]),
-                    );
-                    let choice = *input.lock().unwrap();
-                    match choice {
-                        0usize => {
-                            yield inkgen::Paragraph::new(
-                                vec![inkgen::Part::Text(String::from(
-                                    "\"Are you quite sure of that?\"",
-                                ))],
-                                None,
-                            );
-                            yield inkgen::Paragraph::new(
-                                vec![inkgen::Part::Text(String::from(
-                                    "\"Yes, yes, don\'t you worry about me.\"",
-                                ))],
-                                None,
-                            );
-                            break;
-                        }
-                        1usize => {
-                            yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Text ( String :: from ( "\"You don\'t look quite right" ) ) , inkgen :: Part :: Text ( String :: from ( ", Monsieur,\" I felt the need to say, \"You look rather tired.\"" ) ) ] , None ) ;
-                            yield inkgen::Paragraph::new(
-                                vec![inkgen::Part::Text(String::from(
-                                    "\"Well, yes... but that is of no issue.\"",
-                                ))],
-                                None,
-                            );
-                            break;
-                        }
-                        2usize => {
-                            yield inkgen::Paragraph::new(
-                                vec![
-                                    inkgen::Part::Text(String::from("\"Very well")),
-                                    inkgen::Part::Text(String::from(
-                                        ", call if you need me,\" I say, as I leave the room.",
-                                    )),
-                                ],
-                                None,
-                            );
-                            yield inkgen::Paragraph::new(
-                                vec![inkgen::Part::Text(String::from("\"Yes, very well.\""))],
-                                None,
-                            );
-                            break;
-                        }
-                        _ => continue,
-                    }
-                }
-                return;
-            }
-        }
     }
 }

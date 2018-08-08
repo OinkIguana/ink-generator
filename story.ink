@@ -1,24 +1,16 @@
-"What's that?" my master asked.
-* "I am somewhat tired[."]," I repeated.
-  "Really," he responded. "How deleterious."
-* "Nothing, Monsieur!"[] I replied.
-  "Very good, then."
-* "I said, this journey is appalling[."] and I want no more of it."
-  "Ah," he replied, not unkindly. "I see you are feeling frustrated. Tomorrow, things will improve."
-
-- -> tomorrow.morning
-
-== tomorrow ==
-
-= morning
-I heard a mumbled "Good morning..." as my master rolled out of bed.
-"Are you alright, Monsieur?" I asked.
-"Quite right," he seemed to try to say.
-* "Are you quite sure of that?"
-  "Yes, yes, don't you worry about me."
-* "You don't look quite right[."], Monsieur," I felt the need to say, "You look rather tired."
-  "Well, yes... but that is of no issue."
-* "Very well[."], call if you need me," I say, as I leave the room.
-  "Yes, very well."
-
-- -> END
+You: <thought:Something feels off...>
+You: Who's in there? You'd best come out quick. I don't take kindly to being snuck up on.
+(Voice): Heh. You're a sharp one...
+* [...]
+  Mystery Man: ... but I knew that already. Your reputation precedes you, kid.
+  Mystery Man: I've been looking for talent like yours. Heard it could be found around here.
+  Mystery Man: I realize you've got some cops to be getting away from right now, so why don't you <>
+    just take this and give me a call everything's all settled down again, hm?
+  You: ... What is it?
+  Mystery Man: A proposition... of a sort. I think you'll be interested. Now if you'll excuse me, <>
+    I've some else place to be right now.
+* You: Watch it[.], mate. I think you might have found yourself in the wrong part of town.
+  Mystery Man: Whoa, no need to get all worked up. I have come on business–
+  You: Well hurry it up then. I haven't got all day.
+  Mystery Man: Well, why don't I just leave you with this then, and I'll be on my way. I trust <>
+    I'll be hearing from you again soon.
