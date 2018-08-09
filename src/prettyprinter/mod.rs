@@ -16,19 +16,20 @@ pub fn pretty_print(name: &str, ink: Ink) -> String {
     let entry = print_segments(
         &ink.entry,
         &ink.knots.iter().map(|(name, _)| name).collect::<Vec<_>>(),
-        quote!{},
+        false,
     );
     let knots = ink.knots.iter().map(|(name, knot)| print_knot(name, knot));
 
     let tokens = quote! {
         pub mod #name {
-            #![allow(dead_code, unused_imports)]
+            #![allow(dead_code, unused_imports, unreachable_code, non_snake_case)]
             use inkgen::yield_all;
             use inkgen::runtime as inkgen;
 
             pub fn story() -> inkgen::Story {
-                let input: inkgen::Arc<inkgen::Mutex<usize>> = inkgen::Arc::default();
-                inkgen::Story::new(input.clone(), move || {
+                let input = inkgen::Input::default();
+                let state = inkgen::WrappedState::default();
+                inkgen::Story::new(input.clone(), state.clone(), move || {
                     #entry
                 })
             }

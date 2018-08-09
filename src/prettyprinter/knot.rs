@@ -22,7 +22,7 @@ crate fn print_knot(name: &str, knot: &Knot) -> TokenStream {
         .map(|(name, stitch)| print_stitch(name, stitch, &relative_paths));
 
     let entry = if let Some(stitch) = &knot.entry {
-        let segments = print_segments(&stitch.segments, &relative_paths, quote!{ super:: });
+        let segments = print_segments(&stitch.segments, &relative_paths, true);
         quote! {
             move || {
                 #segments
@@ -31,7 +31,7 @@ crate fn print_knot(name: &str, knot: &Knot) -> TokenStream {
     } else if let Some((name, _)) = knot.stitches.iter().next() {
         let name = Ident::new(&format!("stitch_{}", name), Span::call_site());
         quote! {
-            #name(input.clone())
+            #name(input, state)
         }
     } else {
         return TokenStream::new();
@@ -39,8 +39,9 @@ crate fn print_knot(name: &str, knot: &Knot) -> TokenStream {
 
     quote! {
         mod #name {
+            use inkgen::yield_all;
             use inkgen::runtime as inkgen;
-            pub(super) fn entry(input: inkgen::Arc<inkgen::Mutex<usize>>) -> impl inkgen::Generator<Yield = inkgen::Paragraph, Return = ()> {
+            pub(super) fn entry(input: inkgen::Input, state: inkgen::WrappedState) -> impl inkgen::Generator<Yield = inkgen::Paragraph, Return = ()> + Sync + Send {
                 #entry
             }
             #(#stitches)*

@@ -1,6 +1,7 @@
 pub use std::sync::Mutex;
 pub use std::ops::{Generator, GeneratorState};
 pub use std::sync::Arc;
+pub use std::collections::HashMap;
 
 #[derive(Clone, Eq, PartialEq, Debug)]
 #[doc(hidden)]
@@ -33,6 +34,7 @@ impl Paragraph {
     #[doc(hidden)]
     pub fn join(mut self, mut other: Paragraph) -> Self {
         self.parts.append(&mut other.parts);
+        self.choices = other.choices;
         self
     }
 
@@ -59,8 +61,36 @@ impl Paragraph {
     }
 }
 
+#[derive(Copy, Clone, Hash, Eq, PartialEq, Debug)]
+#[doc(hidden)]
+pub enum StoryPoint {
+    Named(&'static str),
+    Unnamed(&'static str),
+}
+
+#[derive(Default, Debug)]
+pub struct State {
+    counts: HashMap<StoryPoint, usize>,
+}
+
+impl State {
+    #[doc(hidden)]
+    pub fn visit(&mut self, point: StoryPoint) {
+        self.counts.entry(point).and_modify(|count| *count += 1).or_insert(1);
+    }
+
+    #[doc(hidden)]
+    pub fn visited(&self, point: StoryPoint) -> bool {
+        self.counts.get(&point).unwrap_or(&0) != &0
+    }
+}
+
+pub type Input = Arc<Mutex<usize>>;
+pub type WrappedState = Arc<Mutex<State>>;
+
 pub struct Story {
-    input: Arc<Mutex<usize>>,
+    input: Input,
+    state: WrappedState,
     buffered_paragraph: Option<Paragraph>,
     generator: Box<dyn Generator<Yield = Paragraph, Return = ()> + Sync + Send>,
 }
@@ -73,7 +103,7 @@ impl std::fmt::Debug for Story {
 
 impl Story {
     #[doc(hidden)]
-    pub fn new<Gen>(input: Arc<Mutex<usize>>, mut generator: Gen) -> Self
+    pub fn new<Gen>(input: Input, state: WrappedState, mut generator: Gen) -> Self
     where
         Gen: Generator<Yield = Paragraph, Return = ()> + Sync + Send + 'static,
     {
@@ -83,9 +113,20 @@ impl Story {
         };
         Story {
             input,
+            state,
             buffered_paragraph,
             generator: Box::new(generator),
         }
+    }
+
+    pub fn visits(&self, name: &'static str) -> usize {
+        self.state
+            .lock()
+            .unwrap()
+            .counts
+            .get(&StoryPoint::Named(name))
+            .cloned()
+            .unwrap_or_default()
     }
 
     // TODO: might be nice to make many structs (UnsartedStory, Story, and ChoiceStory) with only

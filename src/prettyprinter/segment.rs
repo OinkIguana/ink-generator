@@ -33,14 +33,26 @@ fn break_at_break(parts: &[Part]) -> Vec<&[Part]> {
 }
 
 fn divert_to(
-    root_path: TokenStream,
+    is_in_module: bool,
     knot: Option<&str>,
     stitch: Option<&str>,
     parts: Vec<Part>,
 ) -> TokenStream {
-    let knot_name = knot.map(|knot| Ident::new(&format!("knot_{}", knot), Span::call_site()));
-    let stitch_name =
-        stitch.map(|stitch| Ident::new(&format!("stitch_{}", stitch), Span::call_site()));
+    let (knot_name, stitch_name) = {
+        if is_in_module {
+            (
+                knot.map(|knot| Ident::new(&format!("knot_{}", knot), Span::call_site())),
+                stitch.map(|stitch| Ident::new(&format!("stitch_{}", stitch), Span::call_site())),
+            )
+        } else {
+            (
+                stitch.map(|knot| Ident::new(&format!("knot_{}", knot), Span::call_site())),
+                None,
+            )
+        }
+    };
+    let root_path = if is_in_module { quote! { super:: } } else { quote!{} };
+
     let path = match (knot_name, stitch_name) {
         (Some(knot), None) => quote! { #root_path #knot::entry },
         (None, Some(stitch)) => quote! { #stitch },
@@ -51,20 +63,23 @@ fn divert_to(
     let mut output = TokenStream::new();
     let mut last = vec![];
     if !parts.is_empty() {
-        let breaks = break_at_break(&parts);
-        for parts in &breaks[..breaks.len() - 1] {
+        let mut breaks = break_at_break(&parts);
+        if parts.last() != Some(&Part::Break) {
+            last = breaks.pop().unwrap().to_vec();
+            last.push(Part::Glue);
+        }
+        for parts in &breaks {
             output = quote! {
                 #output
                 yield inkgen::Paragraph::new(vec![#(#parts),*], None);
             };
         }
-        last = breaks[breaks.len() - 1].to_vec();
     }
 
     quote! {
         #output
         let continuation = inkgen::Paragraph::new(vec![#(#last),*], None);
-        let mut gen = #path(input.clone());
+        let mut gen: Box<dyn inkgen::Generator<Yield = inkgen::Paragraph, Return = ()> + Sync + Send> = Box::new(#path(input, state));
         match unsafe { inkgen::Generator::resume(&mut gen) } {
             inkgen::GeneratorState::Yielded(paragraph) => {
                 yield continuation.join(paragraph);
@@ -78,7 +93,7 @@ fn divert_to(
 crate fn print_segments(
     segments: &Vec<Segment>,
     relative_paths: &Vec<&String>,
-    root_path: TokenStream,
+    is_in_module: bool,
 ) -> TokenStream {
     let mut output = TokenStream::new();
     let mut parts = vec![];
@@ -92,7 +107,7 @@ crate fn print_segments(
                         // full divert path
                         let (knot, stitch) = divert.split_at(split);
                         let diverted = divert_to(
-                            root_path,
+                            is_in_module,
                             Some(knot),
                             Some(&stitch[1..]),
                             parts[..i].to_vec(),
@@ -100,8 +115,7 @@ crate fn print_segments(
                         return quote! { #output #diverted };
                     } else if relative_paths.contains(&divert) {
                         // relative path
-                        let diverted =
-                            divert_to(root_path, None, Some(divert), parts[..i].to_vec());
+                        let diverted = divert_to(is_in_module, None, Some(divert), parts[..i].to_vec());
                         return quote! { #output #diverted };
                     } else if divert == "DONE" || divert == "END" {
                         // not a real divert
@@ -112,47 +126,59 @@ crate fn print_segments(
                                 yield inkgen::Paragraph::new(vec![#(#parts),*], None);
                             };
                         }
-                        return quote! { #output return };
+                        return quote! { #output return; };
                     } else {
                         // full divert path to just a knot
-                        let diverted =
-                            divert_to(root_path, Some(divert), None, parts[..i].to_vec());
+                        let diverted = divert_to(is_in_module, Some(divert), None, parts[..i].to_vec());
                         return quote! { #output #diverted };
                     }
                 }
             }
             Segment::Choices(choices) => {
+                let stickies: Vec<_> = choices
+                    .iter()
+                    .map(|(choice, _)| choice.sticky)
+                    .collect();
+                let names: Vec<_> = choices
+                    .iter()
+                    .map(|(choice, _)| &choice.name)
+                    .collect();
                 let options: Vec<_> = choices
                     .iter()
                     .map(|(choice, _)| {
-                        let parts =
-                            [choice.prefix.parts.clone(), choice.choice.parts.clone()].concat();
+                        let parts = [choice.prefix.parts.clone(), choice.choice.parts.clone()].concat();
                         quote! { vec![#(#parts),*] }
-                    }).collect();
+                    })
+                    .collect();
                 let cases: Vec<_> = choices
                     .iter()
-                    .enumerate()
-                    .map(|(index, (choice, case))| {
+                    .map(|(choice, case)| {
                         let segment = Segment::Text(Message {
                             parts: [
                                 choice.prefix.parts.clone(),
                                 choice.suffix.parts.clone(),
                                 vec![Part::Break],
-                            ]
-                                .concat(),
+                            ].concat(),
                         });
                         let tokens = print_segments(
                             &[vec![segment], case.clone()].concat(),
                             relative_paths,
-                            root_path.clone(),
+                            is_in_module,
                         );
+                        let name = &choice.name;
+                        let sticky = choice.sticky;
                         quote! {
-                            #index => {
+                            if #sticky || !state.lock().unwrap().visited(inkgen::StoryPoint::Unnamed(#name)) {
+                                i += 1;
+                            }
+                            if i == choice {
+                                state.lock().unwrap().visit(inkgen::StoryPoint::Unnamed(#name));
                                 #tokens
-                                break
+                                break;
                             }
                         }
-                    }).collect();
+                    })
+                    .collect();
                 let breaks = break_at_break(&parts);
                 for parts in &breaks[0..breaks.len() - 1] {
                     output = quote! {
@@ -164,12 +190,23 @@ crate fn print_segments(
                 output = quote! {
                     #output
                     loop {
-                        yield inkgen::Paragraph::new(vec![#(#last),*], Some(vec![#(#options),*]));
+                        let choices = {
+                            let state = state.lock().unwrap();
+                            let mut choices = vec![];
+                            #(
+                                if #stickies || !state.visited(inkgen::StoryPoint::Unnamed(#names)) {
+                                    choices.push(#options);
+                                }
+                            )*
+                            choices
+                        };
+                        yield inkgen::Paragraph::new(
+                            vec![#(#last),*],
+                            Some(choices),
+                        );
                         let choice = *input.lock().unwrap();
-                        match choice {
-                            #(#cases)*
-                            _ => continue,
-                        }
+                        let mut i = 0;
+                        #(#cases)*
                     }
                 };
                 parts.clear();

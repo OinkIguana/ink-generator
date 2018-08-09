@@ -1,16 +1,32 @@
-You: <thought:Something feels off...>
-You: Who's in there? You'd best come out quick. I don't take kindly to being snuck up on.
-(Voice): Heh. You're a sharp one...
-* [...]
-  Mystery Man: ... but I knew that already. Your reputation precedes you, kid.
-  Mystery Man: I've been looking for talent like yours. Heard it could be found around here.
-  Mystery Man: I realize you've got some cops to be getting away from right now, so why don't you <>
-    just take this and give me a call everything's all settled down again, hm?
-  You: ... What is it?
-  Mystery Man: A proposition... of a sort. I think you'll be interested. Now if you'll excuse me, <>
-    I've some else place to be right now.
-* You: Watch it[.], mate. I think you might have found yourself in the wrong part of town.
-  Mystery Man: Whoa, no need to get all worked up. I have come on business–
-  You: Well hurry it up then. I haven't got all day.
-  Mystery Man: Well, why don't I just leave you with this then, and I'll be on my way. I trust <>
-    I'll be hearing from you again soon.
+Hello. I think you're due for a story about now. Care to begin?
+* [Sure]
+  Excellent. Let's get started then.
+  -> Story
+* [Nope]
+  Oh, well um. I guess I'll be seeing you around then.
+  -> END
+
+== Story ==
+
+Once upon a time, there were two children—Alice and Bob, I'll call them.
+Now, you must know, Alice and Bob weren't exactly normal children... -> char_intro
+
+= char_intro
+
+Care to hear more?
+* [Tell me about Alice]
+  Well you see, Alice was well versed in the dark arts—forbidden magics and the like. A master at
+  <> potions like none other. Needless to say, a dangerous character. She didn't keep many friends,
+  <> or rather, many friends didn't keep her. Those who didn't recognize her for who she truly was,
+  <> well... I can't say it turned out well for them. Other than Bob that is.
+  -> char_intro
+* [Tell me about Bob]
+  Bob was a man of intelligence above all others. I have never seen anyone else who had a grasp of
+  <> such a variety of subjects as Bob. The only thing he seemed unable to master was magic. The
+  <> fundamentally non-sensical nature of magic didn't sit well in his entirely too rational mind.
+  <> Maybe Alice's skills were what inspired Bob to stick around with her all this time.
+  -> char_intro
++ [That's all I need to know]
+  Well, lucky for you, that's all I have to tell.
+  See you around, friend.
+  -> END

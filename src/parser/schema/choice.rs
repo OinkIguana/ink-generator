@@ -1,9 +1,11 @@
+use uuid::Uuid;
 use super::message::Message;
 use crate::Error;
 
 #[derive(Clone, Debug)]
 crate struct Choice {
     crate sticky: bool,
+    crate name: String,
     crate prefix: Message,
     crate choice: Message,
     crate suffix: Message,
@@ -35,6 +37,7 @@ impl Choice {
             )?;
             Ok(Some(Choice {
                 sticky,
+                name: format!("{}", Uuid::new_v4()),
                 prefix: parts.get(0).cloned().unwrap_or(Message::empty()),
                 choice: parts.get(1).cloned().unwrap_or(Message::empty()),
                 suffix: parts.get(2).cloned().unwrap_or(Message::empty()),

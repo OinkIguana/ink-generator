@@ -29,9 +29,7 @@ fn main() {
             .unwrap_or("story"),
         ink,
     );
-    if let Some(mut outfile) =
-        outfile.map(|path| File::create(path).expect("Error opening input file"))
-    {
+    if let Some(mut outfile) = outfile.map(|path| File::create(path).expect("Error opening input file")) {
         writeln!(outfile, "{}", generated);
     } else {
         println!("{}", generated);

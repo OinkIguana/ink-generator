@@ -13,7 +13,7 @@ fn main() {
         println!("{}", paragraph.text());
         if let Some(choices) = paragraph.choices() {
             for (i, choice) in choices.iter().enumerate() {
-                println!("{}", format!("{}: {}", i, choice).blue());
+                println!("{}", format!("{}: {}", i + 1, choice).blue());
             }
             print!("{}", "?> ".blue());
             stdout().flush().unwrap();

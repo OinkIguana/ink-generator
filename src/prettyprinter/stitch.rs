@@ -7,9 +7,9 @@ use quote::{
 
 crate fn print_stitch(name: &str, stitch: &Stitch, relative_paths: &Vec<&String>) -> TokenStream {
     let name = Ident::new(&format!("stitch_{}", name), Span::call_site());
-    let segments = print_segments(&stitch.segments, relative_paths, quote! { super:: });
+    let segments = print_segments(&stitch.segments, relative_paths, true);
     quote! {
-        pub(super) fn #name(input: inkgen::Arc<inkgen::Mutex<usize>>) -> impl inkgen::Generator<Yield = inkgen::Paragraph, Return = ()> {
+        pub(super) fn #name(input: inkgen::Input, state: inkgen::WrappedState) -> impl inkgen::Generator<Yield = inkgen::Paragraph, Return = ()> + Sync + Send {
             move || {
                 #(#segments)*
             }
