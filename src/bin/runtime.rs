@@ -3,13 +3,19 @@
 use colored::*;
 use std::io::{stdout, Write};
 use text_io::*;
+use inkgen::runtime::Story;
+
 mod story;
 
 fn main() {
     let mut story = story::story::story();
     let mut selection = 0usize;
-    loop {
-        let (paragraph, s) = unsafe { story.select(selection) };
+    let _ended_story = loop {
+        let (paragraph, s) = match story {
+            Story::Unstarted(story) => story.start(),
+            Story::Regular(story) => story.select(selection),
+            Story::Ended(story) => break story,
+        };
         println!("{}", paragraph.text());
         if let Some(choices) = paragraph.choices() {
             println!("");
@@ -20,10 +26,6 @@ fn main() {
             stdout().flush().unwrap();
             selection = read!();
         }
-        if let Some(s) = s {
-            story = s;
-        } else {
-            break;
-        }
-    }
+        story = s;
+    };
 }
