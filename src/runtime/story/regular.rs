@@ -1,8 +1,9 @@
 use std::sync::Arc;
 pub use std::ops::{Generator, GeneratorState};
-use super::{Story, EndedStory, Paragraph, Input, WrappedState, Part};
+use super::{Story, StoryID, EndedStory, Paragraph, Input, WrappedState, Part};
 
 pub struct RegularStory {
+    pub(super) id: StoryID,
     pub(super) input: Input,
     pub(super) state: WrappedState,
     pub(super) buffered_paragraph: Option<Paragraph>,
@@ -27,6 +28,7 @@ impl RegularStory {
                     GeneratorState::Complete(..) => return (
                         output.expect("Should have gotten output by now"),
                         Story::Ended(EndedStory {
+                            id: self.id,
                             state: Arc::try_unwrap(self.state).unwrap().into_inner().unwrap(),
                         }),
                     ),

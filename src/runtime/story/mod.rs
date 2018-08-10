@@ -1,11 +1,13 @@
 pub use std::ops::{Generator, GeneratorState};
 use super::{Input, WrappedState, Paragraph, Part, StoryPoint};
 
+mod id;
 mod unstarted;
 mod regular;
 mod ended;
 
-use self::{
+pub use self::{
+    id::StoryID,
     unstarted::UnstartedStory,
     regular::RegularStory,
     ended::EndedStory,
@@ -25,11 +27,12 @@ impl std::fmt::Debug for Story {
 
 impl Story {
     #[doc(hidden)]
-    pub fn new<Gen>(input: Input, state: WrappedState, generator: Gen) -> Self
+    pub fn new<Gen>(id: StoryID, input: Input, state: WrappedState, generator: Gen) -> Self
     where
         Gen: Generator<Yield = Paragraph, Return = ()> + Sync + Send + 'static,
     {
         Story::Unstarted(UnstartedStory {
+            id,
             input,
             state,
             generator: Box::new(generator),
@@ -60,6 +63,16 @@ impl Story {
                 .get(&StoryPoint::Named(name))
                 .cloned()
                 .unwrap_or_default(),
+        }
+    }
+}
+
+impl PartialEq<StoryID> for Story {
+    fn eq(&self, id: &StoryID) -> bool {
+        match self {
+            Story::Unstarted(story) => &story.id == id,
+            Story::Regular(story) => &story.id == id,
+            Story::Ended(story) => &story.id == id,
         }
     }
 }

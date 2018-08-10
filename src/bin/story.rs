@@ -2,20 +2,21 @@ pub mod story {
     #![allow(dead_code, unused_imports, unreachable_code, non_snake_case)]
     use inkgen::runtime as inkgen;
     use inkgen::yield_all;
+    pub const ID: inkgen::StoryID = inkgen::StoryID("d0025bef-0dda-411b-bee0-036e152163d8");
     pub fn story() -> inkgen::Story {
         let input = inkgen::Input::default();
         let state = inkgen::WrappedState::default();
-        inkgen::Story::new(input.clone(), state.clone(), move || loop {
+        inkgen::Story::new(ID, input.clone(), state.clone(), move || loop {
             let choices = {
                 let state = state.lock().unwrap();
                 let mut choices = vec![];
                 if false || !state.visited(inkgen::StoryPoint::Unnamed(
-                    "b9bfb0ce-c856-4b56-b706-162224b5a7ef",
+                    "c998e3b4-3db4-4d3f-89ed-f55196eec0dc",
                 )) {
                     choices.push(vec![inkgen::Part::Text(String::from("Sure"))]);
                 }
                 if false || !state.visited(inkgen::StoryPoint::Unnamed(
-                    "87045d18-1fd4-4fbc-9438-3211cb4a8e55",
+                    "cba4d288-e8f5-4f14-b01c-3538f757ee4e",
                 )) {
                     choices.push(vec![inkgen::Part::Text(String::from("Nope"))]);
                 }
@@ -30,13 +31,13 @@ pub mod story {
             let choice = *input.lock().unwrap();
             let mut i = 0;
             if false || !state.lock().unwrap().visited(inkgen::StoryPoint::Unnamed(
-                "b9bfb0ce-c856-4b56-b706-162224b5a7ef",
+                "c998e3b4-3db4-4d3f-89ed-f55196eec0dc",
             )) {
                 i += 1;
             }
             if i == choice {
                 state.lock().unwrap().visit(inkgen::StoryPoint::Unnamed(
-                    "b9bfb0ce-c856-4b56-b706-162224b5a7ef",
+                    "c998e3b4-3db4-4d3f-89ed-f55196eec0dc",
                 ));
                 yield inkgen::Paragraph::new(
                     vec![inkgen::Part::Text(String::from(
@@ -58,13 +59,13 @@ pub mod story {
                 break;
             }
             if false || !state.lock().unwrap().visited(inkgen::StoryPoint::Unnamed(
-                "87045d18-1fd4-4fbc-9438-3211cb4a8e55",
+                "cba4d288-e8f5-4f14-b01c-3538f757ee4e",
             )) {
                 i += 1;
             }
             if i == choice {
                 state.lock().unwrap().visit(inkgen::StoryPoint::Unnamed(
-                    "87045d18-1fd4-4fbc-9438-3211cb4a8e55",
+                    "cba4d288-e8f5-4f14-b01c-3538f757ee4e",
                 ));
                 yield inkgen::Paragraph::new(
                     vec![inkgen::Part::Text(String::from(
@@ -128,7 +129,7 @@ pub mod story {
                         ]);
                     }
                     if true || !state.visited(inkgen::StoryPoint::Unnamed(
-                        "54cff338-f102-4dc1-ad00-87fb6cb22554",
+                        "8ad8b2e4-b242-44f5-b9e5-60408a390ac4",
                     )) {
                         choices.push(vec![inkgen::Part::Text(String::from(
                             "That\'s all I need to know",
@@ -203,13 +204,13 @@ pub mod story {
                     break;
                 }
                 if true || !state.lock().unwrap().visited(inkgen::StoryPoint::Unnamed(
-                    "54cff338-f102-4dc1-ad00-87fb6cb22554",
+                    "8ad8b2e4-b242-44f5-b9e5-60408a390ac4",
                 )) {
                     i += 1;
                 }
                 if i == choice {
                     state.lock().unwrap().visit(inkgen::StoryPoint::Unnamed(
-                        "54cff338-f102-4dc1-ad00-87fb6cb22554",
+                        "8ad8b2e4-b242-44f5-b9e5-60408a390ac4",
                     ));
                     yield inkgen::Paragraph::new(
                         vec![inkgen::Part::Text(String::from(

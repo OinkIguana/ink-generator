@@ -10,6 +10,7 @@ mod story;
 fn main() {
     let mut story = story::story::story();
     let mut selection = 0usize;
+
     let _ended_story = loop {
         let (paragraph, s) = match story {
             Story::Unstarted(story) => story.start(),

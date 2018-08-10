@@ -1,7 +1,8 @@
-use super::super::{State, StoryPoint};
+use super::super::{State, StoryPoint, StoryID};
 
 #[derive(Clone)]
 pub struct EndedStory {
+    pub(super) id: StoryID,
     pub(super) state: State,
 }
 

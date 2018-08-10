@@ -1,7 +1,8 @@
 pub use std::ops::{Generator, GeneratorState};
-use super::{Story, RegularStory, Paragraph, Input, WrappedState};
+use super::{Story, StoryID, RegularStory, Paragraph, Input, WrappedState};
 
 pub struct UnstartedStory {
+    pub(super) id: StoryID,
     pub(super) input: Input,
     pub(super) state: WrappedState,
     pub(super) generator: Box<dyn Generator<Yield = Paragraph, Return = ()> + Sync + Send>,
@@ -15,6 +16,7 @@ impl UnstartedStory {
         };
 
         RegularStory {
+            id: self.id,
             input: self.input,
             state: self.state,
             buffered_paragraph: Some(paragraph),
