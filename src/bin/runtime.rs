@@ -12,6 +12,7 @@ fn main() {
         let (paragraph, s) = unsafe { story.select(selection) };
         println!("{}", paragraph.text());
         if let Some(choices) = paragraph.choices() {
+            println!("");
             for (i, choice) in choices.iter().enumerate() {
                 println!("{}", format!("{}: {}", i + 1, choice).blue());
             }

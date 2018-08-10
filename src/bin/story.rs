@@ -10,12 +10,12 @@ pub mod story {
                 let state = state.lock().unwrap();
                 let mut choices = vec![];
                 if false || !state.visited(inkgen::StoryPoint::Unnamed(
-                    "7981688a-68c6-4dcc-b561-7099c08279a4",
+                    "b9bfb0ce-c856-4b56-b706-162224b5a7ef",
                 )) {
                     choices.push(vec![inkgen::Part::Text(String::from("Sure"))]);
                 }
                 if false || !state.visited(inkgen::StoryPoint::Unnamed(
-                    "17ed9ace-e973-44a8-869e-f14b71f3a38a",
+                    "87045d18-1fd4-4fbc-9438-3211cb4a8e55",
                 )) {
                     choices.push(vec![inkgen::Part::Text(String::from("Nope"))]);
                 }
@@ -30,13 +30,13 @@ pub mod story {
             let choice = *input.lock().unwrap();
             let mut i = 0;
             if false || !state.lock().unwrap().visited(inkgen::StoryPoint::Unnamed(
-                "7981688a-68c6-4dcc-b561-7099c08279a4",
+                "b9bfb0ce-c856-4b56-b706-162224b5a7ef",
             )) {
                 i += 1;
             }
             if i == choice {
                 state.lock().unwrap().visit(inkgen::StoryPoint::Unnamed(
-                    "7981688a-68c6-4dcc-b561-7099c08279a4",
+                    "b9bfb0ce-c856-4b56-b706-162224b5a7ef",
                 ));
                 yield inkgen::Paragraph::new(
                     vec![inkgen::Part::Text(String::from(
@@ -58,13 +58,13 @@ pub mod story {
                 break;
             }
             if false || !state.lock().unwrap().visited(inkgen::StoryPoint::Unnamed(
-                "17ed9ace-e973-44a8-869e-f14b71f3a38a",
+                "87045d18-1fd4-4fbc-9438-3211cb4a8e55",
             )) {
                 i += 1;
             }
             if i == choice {
                 state.lock().unwrap().visit(inkgen::StoryPoint::Unnamed(
-                    "17ed9ace-e973-44a8-869e-f14b71f3a38a",
+                    "87045d18-1fd4-4fbc-9438-3211cb4a8e55",
                 ));
                 yield inkgen::Paragraph::new(
                     vec![inkgen::Part::Text(String::from(
@@ -115,20 +115,20 @@ pub mod story {
                 let choices = {
                     let state = state.lock().unwrap();
                     let mut choices = vec![];
-                    if false || !state.visited(inkgen::StoryPoint::Unnamed(
-                        "ad706d42-21d9-4afc-8abc-d15bee66d837",
-                    )) {
-                        choices.push(vec![inkgen::Part::Text(String::from(
-                            "Tell me about Alice",
-                        ))]);
+                    if false || !state.visited(inkgen::StoryPoint::Named("alice")) {
+                        choices.push(vec![
+                            inkgen::Part::Text(String::from("")),
+                            inkgen::Part::Text(String::from("Tell me about Alice")),
+                        ]);
                     }
-                    if false || !state.visited(inkgen::StoryPoint::Unnamed(
-                        "a1a3da66-4b69-4856-a7cb-8e9c352e47d8",
-                    )) {
-                        choices.push(vec![inkgen::Part::Text(String::from("Tell me about Bob"))]);
+                    if false || !state.visited(inkgen::StoryPoint::Named("bob")) {
+                        choices.push(vec![
+                            inkgen::Part::Text(String::from("")),
+                            inkgen::Part::Text(String::from("Tell me about Bob")),
+                        ]);
                     }
                     if true || !state.visited(inkgen::StoryPoint::Unnamed(
-                        "aaeec53d-6a3d-4b6f-aec6-f0899bf3e88f",
+                        "54cff338-f102-4dc1-ad00-87fb6cb22554",
                     )) {
                         choices.push(vec![inkgen::Part::Text(String::from(
                             "That\'s all I need to know",
@@ -142,15 +142,19 @@ pub mod story {
                 );
                 let choice = *input.lock().unwrap();
                 let mut i = 0;
-                if false || !state.lock().unwrap().visited(inkgen::StoryPoint::Unnamed(
-                    "ad706d42-21d9-4afc-8abc-d15bee66d837",
-                )) {
+                if false || !state
+                    .lock()
+                    .unwrap()
+                    .visited(inkgen::StoryPoint::Named("alice"))
+                {
                     i += 1;
                 }
                 if i == choice {
-                    state.lock().unwrap().visit(inkgen::StoryPoint::Unnamed(
-                        "ad706d42-21d9-4afc-8abc-d15bee66d837",
-                    ));
+                    state
+                        .lock()
+                        .unwrap()
+                        .visit(inkgen::StoryPoint::Named("alice"));
+                    yield inkgen::Paragraph::new(vec![inkgen::Part::Text(String::from(""))], None);
                     yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Text ( String :: from ( "Well you see, Alice was well versed in the dark arts\u{2014}forbidden magics and the like. A master at" ) ) ] , None ) ;
                     yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Glue , inkgen :: Part :: Text ( String :: from ( "potions like none other. Needless to say, a dangerous character. She didn\'t keep many friends," ) ) ] , None ) ;
                     yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Glue , inkgen :: Part :: Text ( String :: from ( "or rather, many friends didn\'t keep her. Those who didn\'t recognize her for who she truly was," ) ) ] , None ) ;
@@ -168,15 +172,19 @@ pub mod story {
                     }
                     break;
                 }
-                if false || !state.lock().unwrap().visited(inkgen::StoryPoint::Unnamed(
-                    "a1a3da66-4b69-4856-a7cb-8e9c352e47d8",
-                )) {
+                if false || !state
+                    .lock()
+                    .unwrap()
+                    .visited(inkgen::StoryPoint::Named("bob"))
+                {
                     i += 1;
                 }
                 if i == choice {
-                    state.lock().unwrap().visit(inkgen::StoryPoint::Unnamed(
-                        "a1a3da66-4b69-4856-a7cb-8e9c352e47d8",
-                    ));
+                    state
+                        .lock()
+                        .unwrap()
+                        .visit(inkgen::StoryPoint::Named("bob"));
+                    yield inkgen::Paragraph::new(vec![inkgen::Part::Text(String::from(""))], None);
                     yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Text ( String :: from ( "Bob was a man of intelligence above all others. I have never seen anyone else who had a grasp of" ) ) ] , None ) ;
                     yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Glue , inkgen :: Part :: Text ( String :: from ( "such a variety of subjects as Bob. The only thing he seemed unable to master was magic. The" ) ) ] , None ) ;
                     yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Glue , inkgen :: Part :: Text ( String :: from ( "fundamentally non-sensical nature of magic didn\'t sit well in his entirely too rational mind." ) ) ] , None ) ;
@@ -195,13 +203,13 @@ pub mod story {
                     break;
                 }
                 if true || !state.lock().unwrap().visited(inkgen::StoryPoint::Unnamed(
-                    "aaeec53d-6a3d-4b6f-aec6-f0899bf3e88f",
+                    "54cff338-f102-4dc1-ad00-87fb6cb22554",
                 )) {
                     i += 1;
                 }
                 if i == choice {
                     state.lock().unwrap().visit(inkgen::StoryPoint::Unnamed(
-                        "aaeec53d-6a3d-4b6f-aec6-f0899bf3e88f",
+                        "54cff338-f102-4dc1-ad00-87fb6cb22554",
                     ));
                     yield inkgen::Paragraph::new(
                         vec![inkgen::Part::Text(String::from(

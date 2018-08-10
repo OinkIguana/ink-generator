@@ -14,13 +14,13 @@ Now, you must know, Alice and Bob weren't exactly normal children... -> char_int
 = char_intro
 
 Care to hear more?
-* [Tell me about Alice]
+* (alice) [Tell me about Alice]
   Well you see, Alice was well versed in the dark arts—forbidden magics and the like. A master at
   <> potions like none other. Needless to say, a dangerous character. She didn't keep many friends,
   <> or rather, many friends didn't keep her. Those who didn't recognize her for who she truly was,
   <> well... I can't say it turned out well for them. Other than Bob that is.
   -> char_intro
-* [Tell me about Bob]
+* (bob) [Tell me about Bob]
   Bob was a man of intelligence above all others. I have never seen anyone else who had a grasp of
   <> such a variety of subjects as Bob. The only thing he seemed unable to master was magic. The
   <> fundamentally non-sensical nature of magic didn't sit well in his entirely too rational mind.

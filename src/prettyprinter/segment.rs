@@ -1,4 +1,4 @@
-use crate::parser::schema::{Message, Part, Segment};
+use crate::parser::schema::{Message, Part, Segment, StoryPoint};
 use proc_macro2::{Ident, Span, TokenStream};
 use quote::ToTokens;
 use quote::{
@@ -168,11 +168,11 @@ crate fn print_segments(
                         let name = &choice.name;
                         let sticky = choice.sticky;
                         quote! {
-                            if #sticky || !state.lock().unwrap().visited(inkgen::StoryPoint::Unnamed(#name)) {
+                            if #sticky || !state.lock().unwrap().visited(#name) {
                                 i += 1;
                             }
                             if i == choice {
-                                state.lock().unwrap().visit(inkgen::StoryPoint::Unnamed(#name));
+                                state.lock().unwrap().visit(#name);
                                 #tokens
                                 break;
                             }
@@ -194,7 +194,7 @@ crate fn print_segments(
                             let state = state.lock().unwrap();
                             let mut choices = vec![];
                             #(
-                                if #stickies || !state.visited(inkgen::StoryPoint::Unnamed(#names)) {
+                                if #stickies || !state.visited(#names) {
                                     choices.push(#options);
                                 }
                             )*
@@ -221,6 +221,20 @@ crate fn print_segments(
         };
     }
     output
+}
+
+impl ToTokens for StoryPoint {
+    fn to_tokens(&self, tokens: &mut TokenStream) {
+        let copy = tokens.clone();
+        match self {
+            StoryPoint::Named(string) => {
+                *tokens = quote! { #copy inkgen::StoryPoint::Named(#string) };
+            }
+            StoryPoint::Unnamed(string) => {
+                *tokens = quote! { #copy inkgen::StoryPoint::Unnamed(#string) };
+            }
+        }
+    }
 }
 
 impl ToTokens for Part {

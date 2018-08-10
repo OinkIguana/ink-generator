@@ -1,11 +1,11 @@
 use uuid::Uuid;
-use super::message::Message;
+use super::{Message, StoryPoint};
 use crate::Error;
 
 #[derive(Clone, Debug)]
 crate struct Choice {
     crate sticky: bool,
-    crate name: String,
+    crate name: StoryPoint,
     crate prefix: Message,
     crate choice: Message,
     crate suffix: Message,
@@ -28,6 +28,16 @@ impl Choice {
             line = line[1..].trim_left();
         }
         if count == depth {
+            let name = {
+                let mut name = None;
+                if line.starts_with("(") {
+                    if let Some(end) = line.find(")") {
+                        name = Some(StoryPoint::Named(line[1..end].to_string()));
+                        line = &line[end + 1..];
+                    }
+                }
+                name.unwrap_or(StoryPoint::Unnamed(format!("{}", Uuid::new_v4())))
+            };
             let parts = line.split(|c| c == '[' || c == ']').take(3).try_fold(
                 vec![],
                 |mut messages, string| {
@@ -37,7 +47,7 @@ impl Choice {
             )?;
             Ok(Some(Choice {
                 sticky,
-                name: format!("{}", Uuid::new_v4()),
+                name,
                 prefix: parts.get(0).cloned().unwrap_or(Message::empty()),
                 choice: parts.get(1).cloned().unwrap_or(Message::empty()),
                 suffix: parts.get(2).cloned().unwrap_or(Message::empty()),

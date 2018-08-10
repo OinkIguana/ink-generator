@@ -7,8 +7,9 @@ mod knot;
 mod message;
 mod segment;
 mod stitch;
+mod story_point;
 
-crate use self::{knot::*, message::*, segment::*, stitch::*};
+crate use self::{knot::*, message::*, segment::*, stitch::*, story_point::*};
 
 #[derive(Clone, Debug)]
 pub struct Ink {
