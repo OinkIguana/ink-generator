@@ -1,13 +1,22 @@
 #![feature(generators, generator_trait)]
 
-use colored::*;
 use std::io::{stdout, Write};
+
+use serde::Deserialize;
+use ron::de::from_str;
+use colored::*;
 use text_io::*;
 use inkgen::runtime::Story;
 
 mod story;
 
-fn main() {
+#[derive(Deserialize, Debug)]
+enum Event {
+    Win,
+    Lose,
+}
+
+fn main() -> Result<(), ron::de::Error> {
     let mut story = story::story::story();
     let mut selection = 0usize;
 
@@ -18,6 +27,9 @@ fn main() {
             Story::Ended(story) => break story,
         };
         println!("{}", paragraph.text());
+        for tag in paragraph.tags().iter().map(|string| from_str::<Event>(string)) {
+            println!("{}", format!("Event: {:?}", tag?).green());
+        }
         if let Some(choices) = paragraph.choices() {
             println!("");
             for (i, choice) in choices.iter().enumerate() {
@@ -29,4 +41,6 @@ fn main() {
         }
         story = s;
     };
+
+    Ok(())
 }

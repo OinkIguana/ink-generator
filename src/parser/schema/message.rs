@@ -5,6 +5,7 @@ crate enum Part {
     Text(String),
     Divert(Option<String>),
     Glue,
+    Tag(String),
     Break,
 }
 
@@ -43,6 +44,7 @@ impl Message {
     crate fn parse(string: &str, line_index: usize) -> Result<Self, Error> {
         parser::parse(string).map_err(|error| match error {
             parser::Error::InvalidIdentifierName => Error::InvalidIdentifierName(line_index),
+            parser::Error::InvalidEscape => Error::InvalidEscapeSequence(line_index),
         })
     }
 
@@ -60,6 +62,7 @@ mod parser {
     #[derive(Debug)]
     pub(super) enum Error {
         InvalidIdentifierName,
+        InvalidEscape,
     }
 
     #[derive(Debug)]
@@ -76,13 +79,16 @@ mod parser {
         Lt,
         LtGt,
         LtDash,
+        Escape,
         Text(char),
+        Hash(String),
     }
 
     impl State {
         fn to_token(self) -> Token {
             match self {
                 State::Start => panic!("The Start state has no Token!"),
+                State::Escape => panic!("The Escape state has no Token!"),
                 State::LtDash => Token::LArrow,
                 State::DashGt => Token::RArrow,
                 State::LBrace => Token::Seq,
@@ -95,6 +101,7 @@ mod parser {
                 State::Dash => Token::Text('-'),
                 State::Lt => Token::Text('<'),
                 State::Text(ch) => Token::Text(ch),
+                State::Hash(string) => Token::Tag(string)
             }
         }
     }
@@ -102,6 +109,7 @@ mod parser {
     #[derive(Debug)]
     enum Token {
         Text(char),
+        Tag(String),
         LArrow,
         RArrow,
         Seq,
@@ -120,11 +128,13 @@ mod parser {
                 (State::Start, None) => {
                     unreachable!("Trying to munch empty string from Start state")
                 }
+                (State::Start, Some('\\')) => lmm(State::Escape, chars.as_str()),
                 (State::Start, Some('{')) => lmm(State::LBrace, chars.as_str()),
                 (State::Start, Some('}')) => lmm(State::RBrace, chars.as_str()),
                 (State::Start, Some('-')) => lmm(State::Dash, chars.as_str()),
                 (State::Start, Some('<')) => lmm(State::Lt, chars.as_str()),
                 (State::Start, Some('|')) => lmm(State::Bar, chars.as_str()),
+                (State::Start, Some('#')) => lmm(State::Hash(String::new()), chars.as_str()),
                 (State::Start, Some(ch)) => lmm(State::Text(ch), chars.as_str()),
                 (State::LBrace, Some('~')) => lmm(State::LBraceTilde, chars.as_str()),
                 (State::LBrace, Some('!')) => lmm(State::LBraceBang, chars.as_str()),
@@ -132,6 +142,9 @@ mod parser {
                 (State::Lt, Some('>')) => lmm(State::LtGt, chars.as_str()),
                 (State::Lt, Some('-')) => lmm(State::LtDash, chars.as_str()),
                 (State::Dash, Some('>')) => lmm(State::DashGt, chars.as_str()),
+                (State::Escape, Some(ch)) => lmm(State::Text(ch), chars.as_str()),
+                (State::Escape, None) => Err(Error::InvalidEscape),
+                (State::Hash(s), Some(ch)) => lmm(State::Hash(s + &ch.to_string()), chars.as_str()),
                 (state, _) => Ok((string, state.to_token())),
             }
         }
@@ -199,6 +212,11 @@ mod parser {
                     let (text, rest) = collect_text(tokens);
                     let mut parts = to_parts(rest)?;
                     parts.push_front(Part::Text(text));
+                    Ok(parts)
+                }
+                Token::Tag(tag) => {
+                    let mut parts = to_parts(rest)?;
+                    parts.push_front(Part::Tag(tag.to_string()));
                     Ok(parts)
                 }
                 _ => unimplemented!(),

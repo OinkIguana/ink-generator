@@ -2,7 +2,7 @@ pub mod story {
     #![allow(dead_code, unused_imports, unreachable_code, non_snake_case)]
     use inkgen::runtime as inkgen;
     use inkgen::yield_all;
-    pub const ID: inkgen::StoryID = inkgen::StoryID("d0025bef-0dda-411b-bee0-036e152163d8");
+    pub const ID: inkgen::StoryID = inkgen::StoryID("f8ebd703-469b-4e1f-bb9b-bb54669d680f");
     pub fn story() -> inkgen::Story {
         let input = inkgen::Input::default();
         let state = inkgen::WrappedState::default();
@@ -11,38 +11,36 @@ pub mod story {
                 let state = state.lock().unwrap();
                 let mut choices = vec![];
                 if false || !state.visited(inkgen::StoryPoint::Unnamed(
-                    "c998e3b4-3db4-4d3f-89ed-f55196eec0dc",
+                    "cdfe4b24-582c-435c-b8e9-5bb2440c513e",
                 )) {
-                    choices.push(vec![inkgen::Part::Text(String::from("Sure"))]);
+                    choices.push(vec![inkgen::Part::Text("Sure")]);
                 }
                 if false || !state.visited(inkgen::StoryPoint::Unnamed(
-                    "cba4d288-e8f5-4f14-b01c-3538f757ee4e",
+                    "865c21b6-cb1d-4ad7-92aa-0d860b820551",
                 )) {
-                    choices.push(vec![inkgen::Part::Text(String::from("Nope"))]);
+                    choices.push(vec![inkgen::Part::Text("Nope")]);
                 }
                 choices
             };
             yield inkgen::Paragraph::new(
-                vec![inkgen::Part::Text(String::from(
+                vec![inkgen::Part::Text(
                     "Hello. I think you\'re due for a story about now. Care to begin?",
-                ))],
+                )],
                 Some(choices),
             );
             let choice = *input.lock().unwrap();
             let mut i = 0;
             if false || !state.lock().unwrap().visited(inkgen::StoryPoint::Unnamed(
-                "c998e3b4-3db4-4d3f-89ed-f55196eec0dc",
+                "cdfe4b24-582c-435c-b8e9-5bb2440c513e",
             )) {
                 i += 1;
             }
             if i == choice {
                 state.lock().unwrap().visit(inkgen::StoryPoint::Unnamed(
-                    "c998e3b4-3db4-4d3f-89ed-f55196eec0dc",
+                    "cdfe4b24-582c-435c-b8e9-5bb2440c513e",
                 ));
                 yield inkgen::Paragraph::new(
-                    vec![inkgen::Part::Text(String::from(
-                        "Excellent. Let\'s get started then.",
-                    ))],
+                    vec![inkgen::Part::Text("Excellent. Let\'s get started then.")],
                     None,
                 );
                 let continuation = inkgen::Paragraph::new(vec![], None);
@@ -59,18 +57,19 @@ pub mod story {
                 break;
             }
             if false || !state.lock().unwrap().visited(inkgen::StoryPoint::Unnamed(
-                "cba4d288-e8f5-4f14-b01c-3538f757ee4e",
+                "865c21b6-cb1d-4ad7-92aa-0d860b820551",
             )) {
                 i += 1;
             }
             if i == choice {
                 state.lock().unwrap().visit(inkgen::StoryPoint::Unnamed(
-                    "cba4d288-e8f5-4f14-b01c-3538f757ee4e",
+                    "865c21b6-cb1d-4ad7-92aa-0d860b820551",
                 ));
                 yield inkgen::Paragraph::new(
-                    vec![inkgen::Part::Text(String::from(
-                        "Oh, well um. I guess I\'ll be seeing you around then.",
-                    ))],
+                    vec![
+                        inkgen::Part::Text("Oh, well um. I guess I\'ll be seeing you around then."),
+                        inkgen::Part::Tag("Lose"),
+                    ],
                     None,
                 );
                 return;
@@ -86,12 +85,12 @@ pub mod story {
             state: inkgen::WrappedState,
         ) -> impl inkgen::Generator<Yield = inkgen::Paragraph, Return = ()> + Sync + Send {
             move || {
-                yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Text ( String :: from ( "Once upon a time, there were two children\u{2014}Alice and Bob, I\'ll call them." ) ) ] , None ) ;
+                yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Text ( "Once upon a time, there were two children\u{2014}Alice and Bob, I\'ll call them." ) ] , None ) ;
                 let continuation = inkgen::Paragraph::new(
                     vec![
-                        inkgen::Part::Text(String::from(
+                        inkgen::Part::Text(
                             "Now, you must know, Alice and Bob weren\'t exactly normal children...",
-                        )),
+                        ),
                         inkgen::Part::Glue,
                     ],
                     None,
@@ -118,27 +117,25 @@ pub mod story {
                     let mut choices = vec![];
                     if false || !state.visited(inkgen::StoryPoint::Named("alice")) {
                         choices.push(vec![
-                            inkgen::Part::Text(String::from("")),
-                            inkgen::Part::Text(String::from("Tell me about Alice")),
+                            inkgen::Part::Text(""),
+                            inkgen::Part::Text("Tell me about Alice"),
                         ]);
                     }
                     if false || !state.visited(inkgen::StoryPoint::Named("bob")) {
                         choices.push(vec![
-                            inkgen::Part::Text(String::from("")),
-                            inkgen::Part::Text(String::from("Tell me about Bob")),
+                            inkgen::Part::Text(""),
+                            inkgen::Part::Text("Tell me about Bob"),
                         ]);
                     }
                     if true || !state.visited(inkgen::StoryPoint::Unnamed(
-                        "8ad8b2e4-b242-44f5-b9e5-60408a390ac4",
+                        "b967289a-8f54-456c-9a4f-e003e401f998",
                     )) {
-                        choices.push(vec![inkgen::Part::Text(String::from(
-                            "That\'s all I need to know",
-                        ))]);
+                        choices.push(vec![inkgen::Part::Text("That\'s all I need to know")]);
                     }
                     choices
                 };
                 yield inkgen::Paragraph::new(
-                    vec![inkgen::Part::Text(String::from("Care to hear more?"))],
+                    vec![inkgen::Part::Text("Care to hear more?")],
                     Some(choices),
                 );
                 let choice = *input.lock().unwrap();
@@ -155,11 +152,11 @@ pub mod story {
                         .lock()
                         .unwrap()
                         .visit(inkgen::StoryPoint::Named("alice"));
-                    yield inkgen::Paragraph::new(vec![inkgen::Part::Text(String::from(""))], None);
-                    yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Text ( String :: from ( "Well you see, Alice was well versed in the dark arts\u{2014}forbidden magics and the like. A master at" ) ) ] , None ) ;
-                    yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Glue , inkgen :: Part :: Text ( String :: from ( "potions like none other. Needless to say, a dangerous character. She didn\'t keep many friends," ) ) ] , None ) ;
-                    yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Glue , inkgen :: Part :: Text ( String :: from ( "or rather, many friends didn\'t keep her. Those who didn\'t recognize her for who she truly was," ) ) ] , None ) ;
-                    yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Glue , inkgen :: Part :: Text ( String :: from ( "well... I can\'t say it turned out well for them. Other than Bob that is." ) ) ] , None ) ;
+                    yield inkgen::Paragraph::new(vec![inkgen::Part::Text("")], None);
+                    yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Text ( "Well you see, Alice was well versed in the dark arts\u{2014}forbidden magics and the like. A master at" ) ] , None ) ;
+                    yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Glue , inkgen :: Part :: Text ( "potions like none other. Needless to say, a dangerous character. She didn\'t keep many friends," ) ] , None ) ;
+                    yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Glue , inkgen :: Part :: Text ( "or rather, many friends didn\'t keep her. Those who didn\'t recognize her for who she truly was," ) ] , None ) ;
+                    yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Glue , inkgen :: Part :: Text ( "well... I can\'t say it turned out well for them. Other than Bob that is." ) ] , None ) ;
                     let continuation = inkgen::Paragraph::new(vec![], None);
                     let mut gen: Box<
                         dyn inkgen::Generator<Yield = inkgen::Paragraph, Return = ()> + Sync + Send,
@@ -185,11 +182,11 @@ pub mod story {
                         .lock()
                         .unwrap()
                         .visit(inkgen::StoryPoint::Named("bob"));
-                    yield inkgen::Paragraph::new(vec![inkgen::Part::Text(String::from(""))], None);
-                    yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Text ( String :: from ( "Bob was a man of intelligence above all others. I have never seen anyone else who had a grasp of" ) ) ] , None ) ;
-                    yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Glue , inkgen :: Part :: Text ( String :: from ( "such a variety of subjects as Bob. The only thing he seemed unable to master was magic. The" ) ) ] , None ) ;
-                    yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Glue , inkgen :: Part :: Text ( String :: from ( "fundamentally non-sensical nature of magic didn\'t sit well in his entirely too rational mind." ) ) ] , None ) ;
-                    yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Glue , inkgen :: Part :: Text ( String :: from ( "Maybe Alice\'s skills were what inspired Bob to stick around with her all this time." ) ) ] , None ) ;
+                    yield inkgen::Paragraph::new(vec![inkgen::Part::Text("")], None);
+                    yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Text ( "Bob was a man of intelligence above all others. I have never seen anyone else who had a grasp of" ) ] , None ) ;
+                    yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Glue , inkgen :: Part :: Text ( "such a variety of subjects as Bob. The only thing he seemed unable to master was magic. The" ) ] , None ) ;
+                    yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Glue , inkgen :: Part :: Text ( "fundamentally non-sensical nature of magic didn\'t sit well in his entirely too rational mind." ) ] , None ) ;
+                    yield inkgen :: Paragraph :: new ( vec ! [ inkgen :: Part :: Glue , inkgen :: Part :: Text ( "Maybe Alice\'s skills were what inspired Bob to stick around with her all this time." ) ] , None ) ;
                     let continuation = inkgen::Paragraph::new(vec![], None);
                     let mut gen: Box<
                         dyn inkgen::Generator<Yield = inkgen::Paragraph, Return = ()> + Sync + Send,
@@ -204,22 +201,25 @@ pub mod story {
                     break;
                 }
                 if true || !state.lock().unwrap().visited(inkgen::StoryPoint::Unnamed(
-                    "8ad8b2e4-b242-44f5-b9e5-60408a390ac4",
+                    "b967289a-8f54-456c-9a4f-e003e401f998",
                 )) {
                     i += 1;
                 }
                 if i == choice {
                     state.lock().unwrap().visit(inkgen::StoryPoint::Unnamed(
-                        "8ad8b2e4-b242-44f5-b9e5-60408a390ac4",
+                        "b967289a-8f54-456c-9a4f-e003e401f998",
                     ));
                     yield inkgen::Paragraph::new(
-                        vec![inkgen::Part::Text(String::from(
+                        vec![inkgen::Part::Text(
                             "Well, lucky for you, that\'s all I have to tell.",
-                        ))],
+                        )],
                         None,
                     );
                     yield inkgen::Paragraph::new(
-                        vec![inkgen::Part::Text(String::from("See you around, friend."))],
+                        vec![
+                            inkgen::Part::Text("See you around, friend."),
+                            inkgen::Part::Tag("Win"),
+                        ],
                         None,
                     );
                     return;

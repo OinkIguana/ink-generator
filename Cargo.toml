@@ -13,7 +13,7 @@ path = "src/lib.rs"
 
 [features]
 default = ["compiler", "runtime", "binary"]
-binary = ["colored", "text_io"]
+binary = ["colored", "text_io", "ron", "serde"]
 runtime = []
 compiler = ["quote", "proc-macro2", "uuid"]
 
@@ -33,3 +33,5 @@ text_io = { version = "0.1.7", optional = true }
 quote = { version = "0.6", optional = true }
 proc-macro2 = { version = "0.4", optional = true }
 uuid = { version = "0.6", features = ["v4"], optional = true }
+serde = { version = "1.0", optional = true }
+ron = { version = "0.3", optional = true }

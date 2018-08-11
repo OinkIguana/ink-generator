@@ -5,6 +5,7 @@ pub enum Error {
     IncorrectChoiceDepth(usize, usize, usize),
     IncorrectCollectDepth(usize, usize, usize),
     InvalidIdentifierName(usize),
+    InvalidEscapeSequence(usize),
     Unknown,
 }
 
@@ -24,7 +25,10 @@ impl std::fmt::Display for Error {
                 expected, actual, line
             ),
             Error::InvalidIdentifierName(line) => {
-                write!(f, "Incorrect identifier name. (line {})", line)
+                write!(f, "Invalid identifier name. (line {})", line)
+            }
+            Error::InvalidEscapeSequence(line) => {
+                write!(f, "Invalid or incomplete escape sequence. (line {})", line)
             }
             _ => write!(f, "{}", std::error::Error::description(self)),
         }
@@ -39,6 +43,7 @@ impl std::error::Error for Error {
             Error::IncorrectChoiceDepth(..) => "Incorrect choice depth",
             Error::IncorrectCollectDepth(..) => "Incorrect collect depth",
             Error::InvalidIdentifierName(..) => "Invalid identifier name",
+            Error::InvalidEscapeSequence(..) => "Invalid or incomplete escape sequence",
             Error::Unknown => "An unknown error occurred",
         }
     }

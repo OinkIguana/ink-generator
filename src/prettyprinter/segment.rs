@@ -243,7 +243,11 @@ impl ToTokens for Part {
             Part::Divert(..) => panic!("Cannot turn a Divert to Tokens"),
             Part::Text(string) => {
                 let copy = tokens.clone();
-                *tokens = quote! { #copy inkgen::Part::Text(String::from(#string)) };
+                *tokens = quote! { #copy inkgen::Part::Text(#string) };
+            }
+            Part::Tag(string) => {
+                let copy = tokens.clone();
+                *tokens = quote! { #copy inkgen::Part::Tag(#string) };
             }
             Part::Glue => {
                 let copy = tokens.clone();

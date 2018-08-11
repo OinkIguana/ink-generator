@@ -3,7 +3,7 @@ Hello. I think you're due for a story about now. Care to begin?
   Excellent. Let's get started then.
   -> Story
 * [Nope]
-  Oh, well um. I guess I'll be seeing you around then.
+  Oh, well um. I guess I'll be seeing you around then. #Lose
   -> END
 
 == Story ==
@@ -28,5 +28,5 @@ Care to hear more?
   -> char_intro
 + [That's all I need to know]
   Well, lucky for you, that's all I have to tell.
-  See you around, friend.
+  See you around, friend. #Win
   -> END

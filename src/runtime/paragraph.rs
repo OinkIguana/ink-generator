@@ -4,18 +4,25 @@ use super::Part;
 pub struct Paragraph {
     pub(super) parts: Vec<Part>,
     pub(super) choices: Option<Vec<Vec<Part>>>,
+    pub(super) tags: Vec<String>,
 }
 
 impl Paragraph {
     #[doc(hidden)]
-    pub fn new(parts: Vec<Part>, choices: Option<Vec<Vec<Part>>>) -> Self {
-        Self { parts, choices }
+    pub fn new(mut parts: Vec<Part>, choices: Option<Vec<Vec<Part>>>) -> Self {
+        let tags = if let Some(Part::Tag(..)) = parts.iter().last() {
+            vec![parts.pop().unwrap().to_string()]
+        } else {
+            vec![]
+        };
+        Self { parts, choices, tags }
     }
 
     #[doc(hidden)]
     pub fn join(mut self, mut other: Paragraph) -> Self {
         self.parts.append(&mut other.parts);
         self.choices = other.choices;
+        self.tags.append(&mut other.tags);
         self
     }
 
@@ -39,5 +46,9 @@ impl Paragraph {
                         .collect::<String>()
                 }).collect()
         })
+    }
+
+    pub fn tags(&self) -> Vec<String> {
+        self.tags.clone()
     }
 }
