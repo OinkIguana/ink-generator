@@ -51,4 +51,10 @@ impl Paragraph {
     pub fn tags(&self) -> Vec<String> {
         self.tags.clone()
     }
+
+    pub fn take_tags(&mut self) -> Vec<String> {
+        let mut tags = vec![];
+        std::mem::swap(&mut tags, &mut self.tags);
+        tags
+    }
 }
