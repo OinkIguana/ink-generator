@@ -4,7 +4,7 @@ crate struct Input<'a> {
     lines: Vec<(usize, &'a str)>,
 }
 
-impl Input<'a> {
+impl<'a> Input<'a> {
     crate fn new(lines: Vec<(usize, &'a str)>) -> Self {
         Input { index: 0, lines }
     }
