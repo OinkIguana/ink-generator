@@ -20,7 +20,7 @@ pub enum Story {
 }
 
 impl std::fmt::Debug for Story {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'a>) -> std::fmt::Result {
+    fn fmt<'a>(&self, f: &mut std::fmt::Formatter<'a>) -> std::fmt::Result {
         write!(f, "Story {{ .. }}")
     }
 }
