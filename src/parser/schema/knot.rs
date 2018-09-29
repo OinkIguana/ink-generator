@@ -3,13 +3,13 @@ use super::stitch::Stitch;
 use crate::Error;
 
 #[derive(Clone, Debug)]
-crate struct Knot {
-    crate entry: Option<Stitch>,
-    crate stitches: Vec<(String, Stitch)>,
+pub(crate) struct Knot {
+    pub(crate) entry: Option<Stitch>,
+    pub(crate) stitches: Vec<(String, Stitch)>,
 }
 
 impl Knot {
-    crate fn parse_name(string: &str) -> Option<String> {
+    pub(crate) fn parse_name(string: &str) -> Option<String> {
         if string.starts_with("=") || string.starts_with(" ") {
             Self::parse_name(&string[1..])
         } else if string.ends_with("=") || string.ends_with(" ") {
@@ -21,7 +21,7 @@ impl Knot {
         }
     }
 
-    crate fn parse(lines: &mut Input) -> Result<Self, crate::Error> {
+    pub(crate) fn parse(lines: &mut Input) -> Result<Self, crate::Error> {
         let entry = if !lines.peek().ok_or(Error::Unknown)?.1.starts_with("=") {
             let stitch = Stitch::parse(lines)?;
             if stitch.is_empty() {

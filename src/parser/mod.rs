@@ -1,7 +1,7 @@
 use crate::Error;
 
 mod input;
-crate mod schema;
+pub(crate) mod schema;
 
 use self::input::Input;
 pub use self::schema::Ink;

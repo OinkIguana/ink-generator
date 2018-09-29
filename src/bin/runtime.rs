@@ -1,4 +1,4 @@
-#![feature(generators, generator_trait)]
+#![feature(generators, generator_trait, uniform_paths)]
 
 use std::io::{stdout, Write};
 

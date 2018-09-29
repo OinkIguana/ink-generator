@@ -1,4 +1,4 @@
-#![feature(generators, generator_trait, iterator_find_map, nll)]
+#![feature(generators, generator_trait, nll, uniform_paths)]
 #![recursion_limit = "128"]
 
 #[cfg(feature = "compiler")]

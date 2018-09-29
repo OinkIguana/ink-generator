@@ -1,5 +1,3 @@
-cargo-features = ["edition"]
-
 [package]
 name = "ink-generator"
 version = "0.1.0"
@@ -21,11 +19,13 @@ compiler = ["quote", "proc-macro2", "uuid"]
 name = "inkgen"
 path = "src/bin/compiler.rs"
 required-features = ["compiler", "binary"]
+edition = "2018"
 
 [[bin]]
 name = "inkplay"
 path = "src/bin/runtime.rs"
 required-features = ["runtime", "binary"]
+edition = "2018"
 
 [dependencies]
 colored = { version = "1.6", optional = true }

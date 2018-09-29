@@ -9,16 +9,16 @@ mod segment;
 mod stitch;
 mod story_point;
 
-crate use self::{knot::*, message::*, segment::*, stitch::*, story_point::*};
+pub(crate) use self::{knot::*, message::*, segment::*, stitch::*, story_point::*};
 
 #[derive(Clone, Debug)]
 pub struct Ink {
-    crate entry: Vec<Segment>,
-    crate knots: HashMap<String, Knot>,
+    pub(crate) entry: Vec<Segment>,
+    pub(crate) knots: HashMap<String, Knot>,
 }
 
 impl Ink {
-    crate fn parse(string: String) -> Result<Self, Error> {
+    pub(crate) fn parse(string: String) -> Result<Self, Error> {
         let mut lines = Input::new(
             string
                 .lines()
