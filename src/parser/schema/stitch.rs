@@ -3,12 +3,12 @@ use super::segment::Segment;
 use crate::Error;
 
 #[derive(Clone, Debug)]
-crate struct Stitch {
-    crate segments: Vec<Segment>,
+pub(crate) struct Stitch {
+    pub(crate) segments: Vec<Segment>,
 }
 
 impl Stitch {
-    crate fn is_empty(&self) -> bool {
+    pub(crate) fn is_empty(&self) -> bool {
         self.segments
             .iter()
             .filter(|segment| !segment.is_empty())
@@ -16,7 +16,7 @@ impl Stitch {
             .is_empty()
     }
 
-    crate fn parse_name(string: &str) -> Option<String> {
+    pub(crate) fn parse_name(string: &str) -> Option<String> {
         if string.starts_with("=") || string.starts_with(" ") {
             Self::parse_name(&string[1..])
         } else if string.ends_with("=") || string.ends_with(" ") {
@@ -28,7 +28,7 @@ impl Stitch {
         }
     }
 
-    crate fn parse(lines: &mut Input) -> Result<Stitch, Error> {
+    pub(crate) fn parse(lines: &mut Input) -> Result<Stitch, Error> {
         let mut segments = vec![];
         loop {
             if let Some((_, line)) = lines.peek() {

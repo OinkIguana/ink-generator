@@ -1,5 +1,5 @@
 #[derive(Clone, Debug)]
-crate enum StoryPoint {
+pub(crate) enum StoryPoint {
     Named(String),
     Unnamed(String),
 }

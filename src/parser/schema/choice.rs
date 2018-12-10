@@ -3,16 +3,16 @@ use super::{Message, StoryPoint};
 use crate::Error;
 
 #[derive(Clone, Debug)]
-crate struct Choice {
-    crate sticky: bool,
-    crate name: StoryPoint,
-    crate prefix: Message,
-    crate choice: Message,
-    crate suffix: Message,
+pub(crate) struct Choice {
+    pub(crate) sticky: bool,
+    pub(crate) name: StoryPoint,
+    pub(crate) prefix: Message,
+    pub(crate) choice: Message,
+    pub(crate) suffix: Message,
 }
 
 impl Choice {
-    crate fn parse(
+    pub(crate) fn parse(
         depth: usize,
         line_index: usize,
         mut line: &str,

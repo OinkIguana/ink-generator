@@ -1,3 +1,4 @@
+#![feature(uniform_paths)]
 use inkgen::{parse, pretty_print};
 use std::env::args;
 use std::fs::File;

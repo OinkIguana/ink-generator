@@ -5,7 +5,7 @@ use quote::quote;
 use super::segment::print_segments;
 use super::stitch::print_stitch;
 
-crate fn print_knot(name: &str, knot: &Knot) -> TokenStream {
+pub(crate) fn print_knot(name: &str, knot: &Knot) -> TokenStream {
     let name = Ident::new(&format!("knot_{}", name), Span::call_site());
 
     let relative_paths = knot
@@ -37,8 +37,8 @@ crate fn print_knot(name: &str, knot: &Knot) -> TokenStream {
 
     quote! {
         mod #name {
-            use inkgen::yield_all;
-            pub(super) fn entry(input: inkgen::runtime::Input, state: inkgen::runtime::WrappedState) -> impl inkgen::runtime::Generator<Yield = inkgen::runtime::Paragraph, Return = ()> + Sync + Send {
+            use inkgen::{yield_all, runtime};
+            pub(super) fn entry(input: runtime::Input, state: runtime::WrappedState) -> impl runtime::Generator<Yield = runtime::Paragraph, Return = ()> + Sync + Send {
                 #entry
             }
             #(#stitches)*

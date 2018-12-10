@@ -24,14 +24,14 @@ pub fn pretty_print(name: &str, ink: Ink) -> String {
     let tokens = quote! {
         pub mod #name {
             #![allow(dead_code, unused_imports, unreachable_code, non_snake_case)]
-            use inkgen::yield_all;
+            use inkgen::{yield_all, runtime};
 
-            pub const ID: inkgen::runtime::StoryID = inkgen::runtime::StoryID(#id);
+            pub const ID: runtime::StoryID = runtime::StoryID(#id);
 
-            pub fn story() -> inkgen::runtime::Story {
-                let input = inkgen::runtime::Input::default();
-                let state = inkgen::runtime::WrappedState::default();
-                inkgen::runtime::Story::new(ID, input.clone(), state.clone(), move || {
+            pub fn story() -> runtime::Story {
+                let input = runtime::Input::default();
+                let state = runtime::WrappedState::default();
+                runtime::Story::new(ID, input.clone(), state.clone(), move || {
                     #entry
                 })
             }

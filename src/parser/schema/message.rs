@@ -1,7 +1,7 @@
 use crate::Error;
 
 #[derive(Clone, PartialEq, Eq, Debug)]
-crate enum Part {
+pub(crate) enum Part {
     Text(String),
     Divert(Option<String>),
     Glue,
@@ -20,8 +20,8 @@ impl Part {
 }
 
 #[derive(Clone, Debug)]
-crate struct Message {
-    crate parts: Vec<Part>,
+pub(crate) struct Message {
+    pub(crate) parts: Vec<Part>,
 }
 
 impl Message {
@@ -29,11 +29,11 @@ impl Message {
         Message { parts }
     }
 
-    crate fn empty() -> Self {
+    pub(crate) fn empty() -> Self {
         Message { parts: vec![] }
     }
 
-    crate fn is_empty(&self) -> bool {
+    pub(crate) fn is_empty(&self) -> bool {
         self.parts
             .iter()
             .filter(|part| !part.is_empty())
@@ -41,14 +41,14 @@ impl Message {
             .is_empty()
     }
 
-    crate fn parse(string: &str, line_index: usize) -> Result<Self, Error> {
+    pub(crate) fn parse(string: &str, line_index: usize) -> Result<Self, Error> {
         parser::parse(string).map_err(|error| match error {
             parser::Error::InvalidIdentifierName => Error::InvalidIdentifierName(line_index),
             parser::Error::InvalidEscape => Error::InvalidEscapeSequence(line_index),
         })
     }
 
-    crate fn with_break(string: &str, line_index: usize) -> Result<Self, Error> {
+    pub(crate) fn with_break(string: &str, line_index: usize) -> Result<Self, Error> {
         let mut message = Self::parse(string, line_index)?;
         message.parts.push(Part::Break);
         Ok(message)

@@ -5,20 +5,20 @@ use super::choice::Choice;
 use super::message::Message;
 
 #[derive(Clone, Debug)]
-crate enum Segment {
+pub(crate) enum Segment {
     Text(Message),
     Choices(Vec<(Choice, Vec<Segment>)>),
 }
 
 impl Segment {
-    crate fn is_empty(&self) -> bool {
+    pub(crate) fn is_empty(&self) -> bool {
         match self {
             Segment::Text(message) => message.is_empty(),
             Segment::Choices(..) => false,
         }
     }
 
-    crate fn parse(depth: usize, lines: &mut Input) -> Result<Option<Segment>, Error> {
+    pub(crate) fn parse(depth: usize, lines: &mut Input) -> Result<Option<Segment>, Error> {
         if let Some((i, line)) = lines.peek().cloned() {
             if line.starts_with("=") {
                 Ok(None)
