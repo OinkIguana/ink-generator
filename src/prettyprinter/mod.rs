@@ -1,8 +1,6 @@
 use crate::Ink;
 use proc_macro2::{Ident, Span};
-use quote::{
-    multi_zip_expr, nested_tuples_pat, pounded_var_names, quote, quote_each_token, quote_spanned,
-};
+use quote::quote;
 use uuid::Uuid;
 
 mod knot;
@@ -27,14 +25,13 @@ pub fn pretty_print(name: &str, ink: Ink) -> String {
         pub mod #name {
             #![allow(dead_code, unused_imports, unreachable_code, non_snake_case)]
             use inkgen::yield_all;
-            use inkgen::runtime as inkgen;
 
-            pub const ID: inkgen::StoryID = inkgen::StoryID(#id);
+            pub const ID: inkgen::runtime::StoryID = inkgen::runtime::StoryID(#id);
 
-            pub fn story() -> inkgen::Story {
-                let input = inkgen::Input::default();
-                let state = inkgen::WrappedState::default();
-                inkgen::Story::new(ID, input.clone(), state.clone(), move || {
+            pub fn story() -> inkgen::runtime::Story {
+                let input = inkgen::runtime::Input::default();
+                let state = inkgen::runtime::WrappedState::default();
+                inkgen::runtime::Story::new(ID, input.clone(), state.clone(), move || {
                     #entry
                 })
             }

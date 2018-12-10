@@ -1,4 +1,4 @@
-#![feature(generators, generator_trait)]
+#![feature(generators, generator_trait, crate_visibility_modifier)]
 
 use std::io::{stdout, Write};
 

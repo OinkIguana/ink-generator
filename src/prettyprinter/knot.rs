@@ -1,8 +1,6 @@
 use crate::parser::schema::Knot;
 use proc_macro2::{Ident, Span, TokenStream};
-use quote::{
-    multi_zip_expr, nested_tuples_pat, pounded_var_names, quote, quote_each_token, quote_spanned,
-};
+use quote::quote;
 
 use super::segment::print_segments;
 use super::stitch::print_stitch;
@@ -40,8 +38,7 @@ crate fn print_knot(name: &str, knot: &Knot) -> TokenStream {
     quote! {
         mod #name {
             use inkgen::yield_all;
-            use inkgen::runtime as inkgen;
-            pub(super) fn entry(input: inkgen::Input, state: inkgen::WrappedState) -> impl inkgen::Generator<Yield = inkgen::Paragraph, Return = ()> + Sync + Send {
+            pub(super) fn entry(input: inkgen::runtime::Input, state: inkgen::runtime::WrappedState) -> impl inkgen::runtime::Generator<Yield = inkgen::runtime::Paragraph, Return = ()> + Sync + Send {
                 #entry
             }
             #(#stitches)*

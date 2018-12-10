@@ -30,7 +30,7 @@ fn main() {
         ink,
     );
     if let Some(mut outfile) = outfile.map(|path| File::create(path).expect("Error opening input file")) {
-        writeln!(outfile, "{}", generated);
+        writeln!(outfile, "{}", generated).unwrap();
     } else {
         println!("{}", generated);
     }

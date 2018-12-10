@@ -1,9 +1,7 @@
 use crate::parser::schema::{Message, Part, Segment, StoryPoint};
 use proc_macro2::{Ident, Span, TokenStream};
 use quote::ToTokens;
-use quote::{
-    multi_zip_expr, nested_tuples_pat, pounded_var_names, quote, quote_each_token, quote_spanned,
-};
+use quote::quote;
 
 fn find_divert(parts: &Vec<Part>) -> Option<(usize, &String)> {
     parts.iter().enumerate().find_map(|(i, part)| {
@@ -71,21 +69,21 @@ fn divert_to(
         for parts in &breaks {
             output = quote! {
                 #output
-                yield inkgen::Paragraph::new(vec![#(#parts),*], None);
+                yield inkgen::runtime::Paragraph::new(vec![#(#parts),*], None);
             };
         }
     }
 
     quote! {
         #output
-        let continuation = inkgen::Paragraph::new(vec![#(#last),*], None);
-        let mut gen: Box<dyn inkgen::Generator<Yield = inkgen::Paragraph, Return = ()> + Sync + Send> = Box::new(#path(input, state));
-        match unsafe { inkgen::Generator::resume(&mut gen) } {
-            inkgen::GeneratorState::Yielded(paragraph) => {
+        let continuation = inkgen::runtime::Paragraph::new(vec![#(#last),*], None);
+        let mut gen: Box<dyn inkgen::runtime::Generator<Yield = inkgen::runtime::Paragraph, Return = ()> + Sync + Send> = Box::new(#path(input, state));
+        match unsafe { inkgen::runtime::Generator::resume(&mut gen) } {
+            inkgen::runtime::GeneratorState::Yielded(paragraph) => {
                 yield continuation.join(paragraph);
                 yield_all! { gen }
             }
-            inkgen::GeneratorState::Complete(()) => yield continuation,
+            inkgen::runtime::GeneratorState::Complete(()) => yield continuation,
         }
     }
 }
@@ -123,7 +121,7 @@ crate fn print_segments(
                         for parts in &breaks {
                             output = quote! {
                                 #output
-                                yield inkgen::Paragraph::new(vec![#(#parts),*], None);
+                                yield inkgen::runtime::Paragraph::new(vec![#(#parts),*], None);
                             };
                         }
                         return quote! { #output return; };
@@ -183,7 +181,7 @@ crate fn print_segments(
                 for parts in &breaks[0..breaks.len() - 1] {
                     output = quote! {
                         #output
-                        yield inkgen::Paragraph::new(vec![#(#parts),*], None);
+                        yield inkgen::runtime::Paragraph::new(vec![#(#parts),*], None);
                     };
                 }
                 let last = breaks[breaks.len() - 1];
@@ -200,7 +198,7 @@ crate fn print_segments(
                             )*
                             choices
                         };
-                        yield inkgen::Paragraph::new(
+                        yield inkgen::runtime::Paragraph::new(
                             vec![#(#last),*],
                             Some(choices),
                         );
@@ -217,7 +215,7 @@ crate fn print_segments(
     for parts in &breaks {
         output = quote! {
             #output
-            yield inkgen::Paragraph::new(vec![#(#parts),*], None);
+            yield inkgen::runtime::Paragraph::new(vec![#(#parts),*], None);
         };
     }
     output
@@ -228,10 +226,10 @@ impl ToTokens for StoryPoint {
         let copy = tokens.clone();
         match self {
             StoryPoint::Named(string) => {
-                *tokens = quote! { #copy inkgen::StoryPoint::Named(#string) };
+                *tokens = quote! { #copy inkgen::runtime::StoryPoint::Named(#string) };
             }
             StoryPoint::Unnamed(string) => {
-                *tokens = quote! { #copy inkgen::StoryPoint::Unnamed(#string) };
+                *tokens = quote! { #copy inkgen::runtime::StoryPoint::Unnamed(#string) };
             }
         }
     }
@@ -243,19 +241,19 @@ impl ToTokens for Part {
             Part::Divert(..) => panic!("Cannot turn a Divert to Tokens"),
             Part::Text(string) => {
                 let copy = tokens.clone();
-                *tokens = quote! { #copy inkgen::Part::Text(#string) };
+                *tokens = quote! { #copy inkgen::runtime::Part::Text(#string) };
             }
             Part::Tag(string) => {
                 let copy = tokens.clone();
-                *tokens = quote! { #copy inkgen::Part::Tag(#string) };
+                *tokens = quote! { #copy inkgen::runtime::Part::Tag(#string) };
             }
             Part::Glue => {
                 let copy = tokens.clone();
-                *tokens = quote! { #copy inkgen::Part::Glue };
+                *tokens = quote! { #copy inkgen::runtime::Part::Glue };
             }
             Part::Break => {
                 let copy = tokens.clone();
-                *tokens = quote! { #copy inkgen::Part::Break };
+                *tokens = quote! { #copy inkgen::runtime::Part::Break };
             }
         }
     }
